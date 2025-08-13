@@ -20,10 +20,10 @@ export interface ContainerTextFlipProps {
 
 export function ContainerTextFlip({
   words = ["better", "modern", "beautiful", "awesome"],
-  interval = 3000,
+  interval = 3000, // slower rotation
   className,
   textClassName,
-  animationDuration = 700,
+  animationDuration = 700, // slower animation
 }: ContainerTextFlipProps) {
   const id = useId();
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -55,21 +55,21 @@ export function ContainerTextFlip({
   }, [words, interval]);
 
   return (
-    <motion.p
+    <motion.div
       layout
       layoutId={`words-here-${id}`}
       animate={{ width }}
       transition={{ duration: animationDuration / 2000 }}
       className={cn(
-        "relative inline-block rounded-lg pt-2 pb-3 text-center text-4xl font-bold text-black md:text-7xl dark:text-white",
-        "[background:linear-gradient(to_bottom,#f3f4f6,#e5e7eb)]",
-        "shadow-[inset_0_-1px_#d1d5db,inset_0_0_0_1px_#d1d5db,_0_4px_8px_#d1d5db]",
-        "dark:[background:linear-gradient(to_bottom,#374151,#1f2937)]",
-        "dark:shadow-[inset_0_-1px_#10171e,inset_0_0_0_1px_hsla(205,89%,46%,.24),_0_4px_8px_#00000052]",
+        "relative inline-block border-2 border-blue-500 pb-2 text-center text-4xl font-bold text-black",
         className
       )}
       key={words[currentWordIndex]}
     >
+      <div className="absolute -top-2 -left-2 size-3.5 border-2 border-blue-500 bg-white" />
+      <div className="absolute -top-2 -right-2 size-3.5 border-2 border-blue-500 bg-white" />
+      <div className="absolute -bottom-2 -left-2 size-3.5 border-2 border-blue-500 bg-white" />
+      <div className="absolute -bottom-2 -right-2 size-3.5 border-2 border-blue-500 bg-white" />
       <motion.div
         transition={{
           duration: animationDuration / 1000,
@@ -92,7 +92,7 @@ export function ContainerTextFlip({
                 filter: "blur(0px)",
               }}
               transition={{
-                delay: index * 0.02,
+                delay: index * 0.035, // slower letter animation
               }}
             >
               {letter}
@@ -100,6 +100,6 @@ export function ContainerTextFlip({
           ))}
         </motion.div>
       </motion.div>
-    </motion.p>
+    </motion.div>
   );
 }
