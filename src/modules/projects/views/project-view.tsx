@@ -13,7 +13,7 @@ export const ProjectView = () => {
 
   return (
     <div className="mb-40">
-      <div className="h-30 max-w-5xl mx-auto px-4 pt-2.5 relative flex items-center justify-center">
+      <div className="h-15 md:h-25 max-w-5xl mx-auto relative flex items-center justify-center">
         {/* Left & Right dashed borders */}
         <div
           className="absolute inset-0 -z-10"
@@ -33,7 +33,7 @@ export const ProjectView = () => {
           }}
         />
 
-        <h1 className="font-phudu font-bold text-5xl">WORK</h1>
+        <h1 className="font-phudu font-bold text-2xl md:text-6xl">WORK</h1>
       </div>
 
       <motion.div
@@ -45,15 +45,14 @@ export const ProjectView = () => {
           delay: 0.4,
         }}
         className="
-        max-w-5xl mx-auto w-full
-        border-l-[1.5px] border-r-[1.5px]
-        p-4 py-16
-        grid grid-cols-1 md:grid-cols-2 gap-x-8 overflow-x-auto gap-y-8
+        max-w-5xl h-full mx-auto w-full
+        border-l-[1.5px] border-r-[1.5px] p-2 md:p-8
+        grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6 overflow-x-auto 
         [border-image:repeating-linear-gradient(to_bottom,#CBCBCB_0_8px,transparent_8px_16px)_1]
       "
       >
         {videos.map((video) => (
-          <div key={video.id} className="col-span-1">
+          <div key={video.id} className="col-span-1 w-full h-full">
             <ProjectCard
               videoId={video.videoId}
               title={video.title}

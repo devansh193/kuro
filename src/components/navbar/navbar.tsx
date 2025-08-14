@@ -5,7 +5,7 @@ import { NavContent } from "./nav-content";
 export const Navbar = () => {
   return (
     <div
-      className="w-full h-20 fixed top-0 left-0 right-0 z-50 border-[#CBCBCB] border-b-[1.5px] backdrop-blur-lg"
+      className="w-full h-16 md:h-20 fixed top-0 left-0 right-0 z-50 border-[#CBCBCB] border-b-[1.5px] backdrop-blur-lg"
       style={{
         borderBottom: "1.5px solid transparent",
         borderImage: `repeating-linear-gradient(to right, #CBCBCB 0 8px, transparent 8px 16px) 1`,
@@ -23,8 +23,10 @@ export const Navbar = () => {
           <KuroLogo />
         </div>
         <div className="flex items-center gap-4 justify-between">
-          <NavContent />
-          <Button size={"lg"} className="rounded-full">
+          <div className="hidden md:block">
+            <NavContent />
+          </div>
+          <Button className="rounded-full text-xs md:text-[16px]">
             Contact Me
           </Button>
         </div>

@@ -10,7 +10,7 @@ export const HomeView = () => {
   return (
     <div className="relative w-full">
       <div
-        className="max-w-5xl mx-auto px-4 pt-2.5 flex flex-col gap-y-2 items-center justify-center relative h-150"
+        className="max-w-5xl mx-auto px-4 pt-2.5 flex flex-col gap-y-2 items-center justify-center relative min-h-120 md:min-h-150"
         style={{
           borderLeft: "1.5px solid transparent",
           borderRight: "1.5px solid transparent",
@@ -20,7 +20,7 @@ export const HomeView = () => {
         <DottedBackground className="absolute inset-0 -z-10" />
         <h1>Hi there</h1>
         <motion.div
-          className="text-6xl max-w-[680px] mx-auto font-bold text-center relative font-phudu"
+          className="text-2xl md:text-6xl max-w-[680px] mx-auto font-bold text-center relative font-phudu"
           initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{
@@ -31,7 +31,7 @@ export const HomeView = () => {
           Turning your footage into
           <ContainerTextFlip
             className="bg-transparent m-2"
-            textClassName="text-6xl"
+            textClassName="text-2xl md:text-6xl"
             words={[
               "powerful stories",
               "reach and revenue ",
@@ -57,7 +57,7 @@ export const HomeView = () => {
           </Button>
         </motion.div>
       </div>
-      <div className="relative w-full h-30 flex items-center justify-center">
+      <div className="relative w-full h-15 md:h-25 flex items-center justify-center">
         <div className="max-w-5xl mx-auto w-full h-full flex items-center justify-center relative">
           {/* Bottom  */}
           <div
@@ -81,7 +81,7 @@ export const HomeView = () => {
               backgroundImage: `repeating-linear-gradient(to bottom, #CBCBCB 0 8px, transparent 8px 16px)`,
             }}
           />
-          <AvatarGroup avatars={sampleAvatars} />
+          <AvatarGroup size="md" avatars={sampleAvatars} />
         </div>
       </div>
       <div

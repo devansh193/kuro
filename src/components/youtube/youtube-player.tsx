@@ -14,7 +14,7 @@ const YouTubePlayer = ({
     height: "100%",
     playerVars: {
       autoplay: 0,
-      controls: 0,
+      controls: 1,
       modestbranding: 1,
       rel: 0,
       fs: 0,
@@ -26,7 +26,7 @@ const YouTubePlayer = ({
   return (
     <div className={cn("w-full h-full", className)}>
       <YouTube
-        className="w-full h-full rounded-[24px] overflow-hidden"
+        className="w-full h-full rounded-[28px] overflow-hidden"
         videoId={videoId}
         opts={opts}
       />

@@ -72,7 +72,7 @@ export function KuroLogo() {
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
     >
-      <div className="relative border-2 border-blue-500 bg-white px-1">
+      <div className="relative border-2 border-blue-500 bg-transparent px-1">
         <div className="absolute -top-2 -left-2 size-3 border-2 border-blue-500 bg-white" />
         <div className="absolute -top-2 -right-2 size-3 border-2 border-blue-500 bg-white" />
         <div className="absolute -bottom-2 -left-2 size-3 border-2 border-blue-500 bg-white" />
