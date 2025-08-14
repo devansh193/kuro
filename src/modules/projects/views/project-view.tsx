@@ -8,31 +8,67 @@ export const ProjectView = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, {
     once: true,
-    margin: "-100px",
+    margin: "-50px",
   });
+
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 1, y: 60 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{
-        duration: 0.5,
-        delay: 0.4,
-      }}
-      className="w-full border-b-[1.5px] border-t-0! p-4 py-16 mb-40 flex items-center justify-center gap-x-8 overflow-x-auto"
-      style={{
-        borderTop: "1.5px solid transparent",
-        borderImage: `repeating-linear-gradient(to right, #CBCBCB 0 8px, transparent 8px 16px) 1`,
-      }}
-    >
-      {videos.map((video) => (
-        <ProjectCard
-          key={video.id}
-          videoId={video.videoId}
-          title={video.title}
-          description={video.description}
+    <div className="mb-40">
+      <div className="h-30 max-w-5xl mx-auto px-4 pt-2.5 relative flex items-center justify-center">
+        {/* Left & Right dashed borders */}
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            borderLeft: "1.5px solid transparent",
+            borderRight: "1.5px solid transparent",
+            borderImage: `repeating-linear-gradient(to bottom, #CBCBCB 0 8px, transparent 8px 16px) 1`,
+          }}
         />
-      ))}
-    </motion.div>
+
+        {/* Bottom dashed border */}
+        <div
+          className="absolute bottom-0 left-0 w-full h-[1.5px] -z-10"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(to right, #CBCBCB 0 8px, transparent 8px 16px)",
+          }}
+        />
+
+        <h1 className="font-phudu font-bold text-5xl">WORK</h1>
+      </div>
+
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 1, y: 60 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{
+          duration: 0.5,
+          delay: 0.4,
+        }}
+        className="
+        max-w-5xl mx-auto w-full
+        border-l-[1.5px] border-r-[1.5px]
+        p-4 py-16
+        grid grid-cols-1 md:grid-cols-2 gap-x-8 overflow-x-auto gap-y-8
+        [border-image:repeating-linear-gradient(to_bottom,#CBCBCB_0_8px,transparent_8px_16px)_1]
+      "
+      >
+        {videos.map((video) => (
+          <div key={video.id} className="col-span-1">
+            <ProjectCard
+              videoId={video.videoId}
+              title={video.title}
+              description={video.description}
+            />
+          </div>
+        ))}
+      </motion.div>
+      <div
+        className=" bottom-0 left-0 w-full h-[1.5px]"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(to right, #CBCBCB 0 8px, transparent 8px 16px)",
+        }}
+      />
+    </div>
   );
 };

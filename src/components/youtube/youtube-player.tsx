@@ -24,12 +24,11 @@ const YouTubePlayer = ({
   };
 
   return (
-    <div className={cn("w-full aspect-video", className)}>
+    <div className={cn("w-full h-full", className)}>
       <YouTube
-        className="w-full h-[300px] rounded-xl"
+        className="w-full h-full rounded-[24px] overflow-hidden"
         videoId={videoId}
         opts={opts}
-        style={{ borderRadius: "24px", overflow: "hidden" }}
       />
     </div>
   );
