@@ -104,7 +104,9 @@ export function KuroLogo() {
         </div>
 
         {/* Logo text */}
-        <h1 className="text-3xl font-black text-black tracking-tight">kuro</h1>
+        <h1 className="text-3xl font-black text-black tracking-tight selection:bg-black selection:text-white">
+          kuro
+        </h1>
       </div>
     </motion.div>
   );

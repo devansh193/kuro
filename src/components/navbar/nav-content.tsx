@@ -15,7 +15,7 @@ export const NavContent = () => {
           key={index}
           whileHover={{
             scale: 1.15,
-            transition: { duration: 0.25, ease: "easeOut" },
+            transition: { duration: 0.1, ease: "easeOut" },
           }}
           whileTap={{
             scale: 0.95,
@@ -23,7 +23,7 @@ export const NavContent = () => {
           }}
           className="relative cursor-pointer"
         >
-          <span className="text-[#747474] hover:text-black font-medium transition-colors duration-200 tracking-tight">
+          <span className="text-[#747474] hover:text-black selection:bg-black font-sans selection:text-white font-medium transition-colors duration-200 tracking-tight">
             {item.label}
           </span>
         </motion.div>

@@ -20,7 +20,7 @@ export const HomeView = () => {
         <DottedBackground className="absolute inset-0 -z-10" />
         <h1>Hi there</h1>
         <motion.div
-          className="text-2xl md:text-6xl max-w-[680px] mx-auto font-bold text-center relative font-phudu"
+          className="text-2xl md:text-6xl max-w-[680px] mx-auto font-bold text-center relative font-phudu selection:bg-black selection:text-white"
           initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{
@@ -40,7 +40,7 @@ export const HomeView = () => {
           />
         </motion.div>
         <motion.h1
-          className="text-xl text-[#000] font-medium text-center max-w-2xl"
+          className="text-xl text-[#000] font-medium text-center max-w-2xl selection:bg-black selection:text-white"
           initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.5, delay: 0.4 }}
