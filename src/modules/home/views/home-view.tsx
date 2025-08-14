@@ -9,7 +9,14 @@ import { sampleAvatars } from "@/data/sample";
 export const HomeView = () => {
   return (
     <div className="relative w-full">
-      <div className="max-w-5xl mx-auto px-4 pt-2.5 flex flex-col gap-y-2 items-center justify-center relative h-150 border-t-0 border-l-[1.5px] border-r-[1.5px] ">
+      <div
+        className="max-w-5xl mx-auto px-4 pt-2.5 flex flex-col gap-y-2 items-center justify-center relative h-150"
+        style={{
+          borderLeft: "1.5px solid transparent",
+          borderRight: "1.5px solid transparent",
+          borderImage: `repeating-linear-gradient(to bottom, #CBCBCB 0 8px, transparent 8px 16px) 1`,
+        }}
+      >
         <DottedBackground className="absolute inset-0 -z-10" />
         <h1>Hi there</h1>
         <motion.div
@@ -50,36 +57,40 @@ export const HomeView = () => {
           </Button>
         </motion.div>
       </div>
-      <div className="relative w-full h-30 flex items-center justify-center border-b-0 border-[1.5px]">
-        <div className="max-w-5xl mx-auto w-full h-full flex items-center border-l-[1.5px] border-r-[1.5px] justify-center relative">
+      <div className="relative w-full h-30 flex items-center justify-center">
+        <div className="max-w-5xl mx-auto w-full h-full flex items-center justify-center relative">
           {/* Bottom  */}
-          {/* <div
-          className="absolute top-0 left-0 right-0 h-[1.5px] "
-          // style={{
-          //   backgroundImage: `repeating-linear-gradient(to right, #CBCBCB 0 8px, transparent 8px 16px)`,
-          // }}
-        /> */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[1.5px] "
+            style={{
+              backgroundImage: `repeating-linear-gradient(to right, #CBCBCB 0 8px, transparent 8px 16px)`,
+            }}
+          />
 
           {/* Left border */}
-          {/* <div
-          className="absolute top-0 bottom-0 left-0 w-[1.5px]"
-          style={{
-            backgroundImage: `repeating-linear-gradient(to bottom, #CBCBCB 0 8px, transparent 8px 16px)`,
-          }}
-        /> */}
-
+          <div
+            className="absolute top-0 bottom-0 left-0 w-[1.5px]"
+            style={{
+              backgroundImage: `repeating-linear-gradient(to bottom, #CBCBCB 0 8px, transparent 8px 16px)`,
+            }}
+          />
           {/* Right border */}
-          {/* <div
-          className="absolute top-0 bottom-0 right-0 w-[1.5px]"
-          style={{
-            backgroundImage: `repeating-linear-gradient(to bottom, #CBCBCB 0 8px, transparent 8px 16px)`,
-          }}
-        /> */}
-          {/* <People /> */}
+          <div
+            className="absolute top-0 bottom-0 right-0 w-[1.5px]"
+            style={{
+              backgroundImage: `repeating-linear-gradient(to bottom, #CBCBCB 0 8px, transparent 8px 16px)`,
+            }}
+          />
           <AvatarGroup avatars={sampleAvatars} />
         </div>
       </div>
-      <div className="w-full border-[1px]" />
+      <div
+        className="w-full"
+        style={{
+          borderTop: "1.5px solid transparent",
+          borderImage: `repeating-linear-gradient(to right, #CBCBCB 0 8px, transparent 8px 16px) 1`,
+        }}
+      />
     </div>
   );
 };

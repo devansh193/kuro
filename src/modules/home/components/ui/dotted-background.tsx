@@ -12,7 +12,7 @@ export function DottedBackground({
   className,
   dotSize = 2,
   dotSpacing = 20,
-  dotColor = "#EFEFEF",
+  dotColor = "#ECECEC",
 }: DottedBackgroundProps) {
   return (
     <div
