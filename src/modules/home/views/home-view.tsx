@@ -8,24 +8,17 @@ import { sampleAvatars } from "@/data/sample";
 
 export const HomeView = () => {
   return (
-    <div className="relative w-full">
-      <div
-        className="max-w-5xl mx-auto px-4 pt-2.5 flex flex-col gap-y-2 items-center justify-center relative min-h-120 md:min-h-150"
-        style={{
-          borderLeft: "1.5px solid transparent",
-          borderRight: "1.5px solid transparent",
-          borderImage: `repeating-linear-gradient(to bottom, #CBCBCB 0 8px, transparent 8px 16px) 1`,
-        }}
-      >
+    <div className="relative w-full px-2 md:px-0">
+      <div className="max-w-5xl mx-auto px-4 pt-2.5 flex flex-col gap-y-2 items-center justify-center relative min-h-120 md:min-h-150 border-spaced-vertical border-l-[1.5px] border-r-[1.5px]">
         <DottedBackground className="absolute inset-0 -z-10" />
         <h1>Hi there</h1>
         <motion.div
-          className="text-2xl md:text-6xl max-w-[680px] mx-auto font-bold text-center relative font-phudu selection:bg-black selection:text-white"
+          className="text-5xl md:text-6xl max-w-[680px] mx-auto font-bold text-center relative font-phudu selection-black"
           initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{
             duration: 0.5,
-            delay: 0.4,
+            delay: 0.2,
           }}
         >
           Turning your footage into
@@ -40,17 +33,17 @@ export const HomeView = () => {
           />
         </motion.div>
         <motion.h1
-          className="text-xl text-[#000] font-medium text-center max-w-2xl selection:bg-black selection:text-white"
+          className="text-xl text-[#000] font-medium text-center max-w-2xl selection-black"
           initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
         >
           Where creativity meets precision in every frame
         </motion.h1>
         <motion.div
           initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
         >
           <Button size={"lg"} className="rounded-full px-8 py-6 text-xl">
             Let&apos;s Go
@@ -60,37 +53,15 @@ export const HomeView = () => {
       <div className="relative w-full h-15 md:h-25 flex items-center justify-center">
         <div className="max-w-5xl mx-auto w-full h-full flex items-center justify-center relative">
           {/* Bottom  */}
-          <div
-            className="absolute top-0 left-0 right-0 h-[1.5px] "
-            style={{
-              backgroundImage: `repeating-linear-gradient(to right, #CBCBCB 0 8px, transparent 8px 16px)`,
-            }}
-          />
-
+          <div className="absolute top-0 left-0 right-0 border-b-[1.5px] border-spaced-horizontal" />
           {/* Left border */}
-          <div
-            className="absolute top-0 bottom-0 left-0 w-[1.5px]"
-            style={{
-              backgroundImage: `repeating-linear-gradient(to bottom, #CBCBCB 0 8px, transparent 8px 16px)`,
-            }}
-          />
+          <div className="absolute top-0 bottom-0 left-0 border-l-[1.5px] border-spaced-vertical" />
           {/* Right border */}
-          <div
-            className="absolute top-0 bottom-0 right-0 w-[1.5px]"
-            style={{
-              backgroundImage: `repeating-linear-gradient(to bottom, #CBCBCB 0 8px, transparent 8px 16px)`,
-            }}
-          />
+          <div className="absolute top-0 bottom-0 right-0 border-r-[1.5px] border-spaced-vertical" />
           <AvatarGroup size="md" avatars={sampleAvatars} />
         </div>
       </div>
-      <div
-        className="w-full"
-        style={{
-          borderTop: "1.5px solid transparent",
-          borderImage: `repeating-linear-gradient(to right, #CBCBCB 0 8px, transparent 8px 16px) 1`,
-        }}
-      />
+      <div className="w-full border-b-[1.5px] border-spaced-horizontal" />
     </div>
   );
 };

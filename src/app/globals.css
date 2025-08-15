@@ -113,6 +113,8 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -125,3 +127,38 @@
   }
 
 }
+
+@layer utilities {
+  .selection-black::selection{
+    background: black;
+    color: white;
+  }
+  .selection-black::-moz-selection{
+    background: black;
+    color: white;
+  }
+  .selection-white::selection{
+    background:white;
+    color: black;
+  }
+  .selection-black::-moz-selection{
+    background: white;
+    color: black;
+  }
+  .border-spaced-vertical {
+    border-image: repeating-linear-gradient(
+      to bottom,
+      #cbcbcb 0 8px,
+      transparent 8px 16px
+    ) 1;
+  }
+  .border-spaced-horizontal {
+    border-image: repeating-linear-gradient(
+      to right,
+      #cbcbcb 0 8px,
+      transparent 8px 16px
+    ) 1;
+  }
+}
+
+

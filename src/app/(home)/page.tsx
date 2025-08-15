@@ -5,6 +5,7 @@ export default function Home() {
     <div>
       <HomeView />
       <ProjectView />
+      {/* <TestimonialView /> */}
     </div>
   );
 }

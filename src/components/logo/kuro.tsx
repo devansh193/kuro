@@ -16,14 +16,14 @@ export function KuroLogo() {
         await pointerControls.start({
           opacity: 1,
           scale: 1.1,
-          bottom: "-16px",
-          right: "-16px",
+          bottom: "-14px",
+          right: "-14px",
           rotate: 0,
           transition: { duration: 0.3, ease: "circOut", delay: 0.3 },
         });
         if (cancelled) return;
         await pointerControls.start({
-          scale: 0.99,
+          scale: 0.9,
           transition: { duration: 0.2, ease: "easeOut", delay: 0.4 },
         });
         if (cancelled) return;

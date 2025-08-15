@@ -4,21 +4,10 @@ import { NavContent } from "./nav-content";
 
 export const Navbar = () => {
   return (
-    <div
-      className="w-full h-16 md:h-20 fixed top-0 left-0 right-0 z-50 border-[#CBCBCB] border-b-[1.5px] backdrop-blur-lg"
-      style={{
-        borderBottom: "1.5px solid transparent",
-        borderImage: `repeating-linear-gradient(to right, #CBCBCB 0 8px, transparent 8px 16px) 1`,
-      }}
-    >
-      <div
-        className="max-w-5xl mx-auto w-full h-full flex items-center justify-between px-4"
-        style={{
-          borderLeft: "1.5px solid transparent",
-          borderRight: "1.5px solid transparent",
-          borderImage: `repeating-linear-gradient(to bottom, #CBCBCB 0 8px, transparent 8px 16px) 1`,
-        }}
-      >
+    <div className="w-full h-16 md:h-20 fixed top-0 left-0 right-0 z-50 border-[#CBCBCB] border-b-[1.5px] backdrop-blur-lg border-spaced-horizontal">
+      <div className="relative max-w-5xl mx-auto w-full h-full flex items-center justify-between px-4">
+        <div className="absolute ml-2 md:ml-0 top-0 bottom-0 left-0 border-l-[1.5px] border-spaced-vertical" />
+        <div className="absolute mr-2 md:mr-0 top-0 bottom-0 right-0 border-l-[1.5px] border-spaced-vertical" />
         <div className="text-black text-lg font-semibold mx-4">
           <KuroLogo />
         </div>
