@@ -1,3 +1,4 @@
+import { Footer } from "../footer/footer";
 import { Navbar } from "../navbar/navbar";
 
 export const HomeLayout = ({ children }: { children: React.ReactNode }) => {
@@ -7,6 +8,7 @@ export const HomeLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="flex min-h-screen pt-20">
         <main className="flex-1 overflow-y-auto">{children}</main>
       </div>
+      <Footer />
     </div>
   );
 };

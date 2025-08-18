@@ -22,17 +22,25 @@ export const ProjectCard = ({ videoId }: VideoCardProps) => {
       </div>
 
       <div className="flex flex-col gap-4">
-        <div className="rounded-[32px] rounded-bl-none w-3/4 bg-background px-4 py-4 flex flex-col justify-between gap-y-2 selection-black">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 1 }}
+          className="rounded-[32px] rounded-bl-none w-3/4 bg-background px-4 py-4 flex flex-col justify-between gap-y-2 selection-black"
+        >
           <h1>
             The golden sun dipped below the horizon, painting the sky in warm
             hues as gentle waves whispered along the tranquil shore.
           </h1>
           <p className="text-start text-xs text-gray-500">Client</p>
-        </div>
+        </motion.div>
 
-        <div
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 1.3 }}
           className="self-end rounded-[32px] rounded-br-none w-3/4 bg-black md:bg-background 
-             transition-colors duration-300 group-hover:bg-black px-6 py-4 
+             transition-colors duration-1000  ease-out group-hover:bg-black px-6 py-4 
              flex flex-col justify-between selection-white"
         >
           <h1 className="text-sm md:text-base font-medium leading-snug text-white  md:text-gray-800 group-hover:text-white">
@@ -41,7 +49,7 @@ export const ProjectCard = ({ videoId }: VideoCardProps) => {
           <p className="text-end text-xs text-gray-500 group-hover:text-gray-300">
             Kuro
           </p>
-        </div>
+        </motion.div>
       </div>
     </motion.div>
   );

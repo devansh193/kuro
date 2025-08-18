@@ -104,7 +104,7 @@ export function KuroLogo() {
         </div>
 
         {/* Logo text */}
-        <h1 className="text-3xl font-black text-black tracking-tight selection:bg-black selection:text-white">
+        <h1 className="text-3xl font-black text-black selection:bg-black selection:text-white">
           kuro
         </h1>
       </div>

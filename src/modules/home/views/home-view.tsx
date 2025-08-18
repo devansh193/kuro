@@ -50,7 +50,7 @@ export const HomeView = () => {
           </Button>
         </motion.div>
       </div>
-      <div className="relative w-full h-15 md:h-25 flex items-center justify-center">
+      <div className="relative w-full h-15 md:h-20 flex items-center justify-center">
         <div className="max-w-5xl mx-auto w-full h-full flex items-center justify-center relative">
           {/* Bottom  */}
           <div className="absolute top-0 left-0 right-0 border-b-[1.5px] border-spaced-horizontal" />
@@ -58,7 +58,7 @@ export const HomeView = () => {
           <div className="absolute top-0 bottom-0 left-0 border-l-[1.5px] border-spaced-vertical" />
           {/* Right border */}
           <div className="absolute top-0 bottom-0 right-0 border-r-[1.5px] border-spaced-vertical" />
-          <AvatarGroup size="md" avatars={sampleAvatars} />
+          <AvatarGroup size="sm" avatars={sampleAvatars} />
         </div>
       </div>
       <div className="w-full border-b-[1.5px] border-spaced-horizontal" />
