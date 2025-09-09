@@ -30,7 +30,7 @@ export const videos = [
     id: 6,
     videoId: "0H6bGdsGpOs",
     client: " I don't even have notes, this is perfect.",
-    kuro: "That's the best feedback ever 🙏",
+    kuro: "That's the best feedback ever 🔥",
     clientName: "Specular Drama",
     imageSrc: "/7.jpg",
     youtubeStats: "2.5k+ Subscribers",
