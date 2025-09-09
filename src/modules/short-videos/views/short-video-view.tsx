@@ -12,21 +12,43 @@ const shorts = [
 export const ShortVideoView = () => {
   return (
     <div>
-      <div className="max-w-5xl mx-auto border-l-[1.5px] border-r-[1.5px] border-spaced-vertical px-4 h-20 flex items-center justify-center">
-        <h1 className="font-sans font-semibold text-2xl md:text-5xl selection:bg-black selection:text-white">
+      {/* Header */}
+      <div
+        className={`
+          max-w-5xl h-20
+          mx-auto px-4
+          flex items-center justify-center
+          border-l-[1.5px] border-r-[1.5px] border-spaced-vertical
+        `}
+      >
+        <h1
+          className={`
+            font-sans font-semibold text-2xl md:text-5xl
+            selection:bg-black selection:text-white
+          `}
+        >
           THE SHORT FUSE
         </h1>
       </div>
+
       <div className="border-b-[1.5px] border-spaced-horizontal" />
 
-      <div className="relative overflow-hidden">
-        {/* scrolling track */}
-        <div className="flex animate-marquee gap-x-8 py-8 px-2 whitespace-nowrap [animation-play-state:running] hover:[animation-play-state:paused]">
-          {[...shorts, ...shorts].map((video, idx) => (
-            <div key={idx} className="shrink-0">
-              <ShortVideo shortId={video.shortId} />
-            </div>
-          ))}
+      <div className="relative overflow-hidden px-2 py-8">
+        <div className="flex w-max animate-marquee [animation-play-state:running] hover:[animation-play-state:paused]">
+          <div className="flex gap-x-4 px-2">
+            {shorts.map((video, idx) => (
+              <div key={`track1-${idx}`} className="shrink-0">
+                <ShortVideo shortId={video.shortId} />
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-x-4 px-2">
+            {shorts.map((video, idx) => (
+              <div key={`track2-${idx}`} className="shrink-0">
+                <ShortVideo shortId={video.shortId} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

@@ -11,8 +11,10 @@ export function KuroLogo() {
 
   useEffect(() => {
     let cancelled = false;
+
     const runSequence = async () => {
       if (isHovered) {
+        // Hover enter sequence
         await pointerControls.start({
           opacity: 1,
           scale: 1.1,
@@ -22,21 +24,25 @@ export function KuroLogo() {
           transition: { duration: 0.3, ease: "circOut", delay: 0.3 },
         });
         if (cancelled) return;
+
         await pointerControls.start({
           scale: 0.9,
           transition: { duration: 0.2, ease: "easeOut", delay: 0.4 },
         });
         if (cancelled) return;
+
         await boxControls.start({
           rotate: 0,
           transition: { duration: 0.3, ease: "easeInOut", delay: 0.5 },
         });
         if (cancelled) return;
+
         await pointerControls.start({
           scale: 1.1,
           transition: { duration: 0.3, ease: "easeInOut", delay: 0.5 },
         });
         if (cancelled) return;
+
         await pointerControls.start({
           opacity: 0,
           scale: 0,
@@ -44,19 +50,24 @@ export function KuroLogo() {
           transition: { duration: 0.3, ease: "easeInOut", delay: 0.1 },
         });
       } else {
-        cancelled = true;
-        pointerControls.set({
+        await pointerControls.start({
           opacity: 0,
           scale: 0,
           bottom: "-20px",
           right: "10px",
           rotate: -90,
+          transition: { duration: 0.15, ease: "easeInOut" },
         });
-        boxControls.set({ rotate: -10 });
+
+        await boxControls.start({
+          rotate: -10,
+          transition: { duration: 0.2, ease: "easeInOut" },
+        });
       }
     };
 
     runSequence();
+
     return () => {
       cancelled = true;
       pointerControls.stop();
@@ -97,13 +108,11 @@ export function KuroLogo() {
             animate={pointerControls}
           >
             <div className="absolute bottom-0 right-0">
-              {/* <MousePointer2 fill="#1447E6" className=" text-blue-100" /> */}
               <Cursor className="size-[22px] fill-black" />
             </div>
           </motion.div>
         </div>
 
-        {/* Logo text */}
         <h1 className="text-3xl font-black text-black selection:bg-black selection:text-white">
           kuro
         </h1>
