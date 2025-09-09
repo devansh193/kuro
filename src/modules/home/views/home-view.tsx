@@ -1,10 +1,10 @@
 "use client";
 import { DottedBackground } from "@/modules/home/components/ui/dotted-background";
 import { ContainerTextFlip } from "@/modules/home/components/ui/text-rotate";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
 import { AvatarGroup } from "@/components/avatar-group";
+import { Button } from "@/components/ui/button";
 import { sampleAvatars } from "@/data/sample";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export const HomeView = () => {

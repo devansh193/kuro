@@ -2,9 +2,8 @@ export const videos = [
   {
     id: 3,
     videoId: "Y76PMmZnYQY",
-    client:
-      "Kuro was one of my first editors who helped me get my first big videos on YouTube. He's an OG, high quality edits, and great to work with.",
-    kuro: "Thank you for the feedback",
+    client: " Perfect pacing, love the flow.",
+    kuro: "Thank you, happy to deliver!",
     clientName: "Ryan Pictures",
     imageSrc: "/1.jpg",
     youtubeStats: "380k+ Subscribers",
@@ -12,8 +11,7 @@ export const videos = [
   {
     id: 1,
     videoId: "9tjM627dvLk",
-    client:
-      "Super creative guy. Always on time. The ideas and the quality of the videos are just something else !!!",
+    client: "This is so sick, great job!!",
     kuro: "Thanks Pep",
     clientName: "Pepezilla",
     imageSrc: "/2.jpg",
@@ -22,8 +20,7 @@ export const videos = [
   {
     id: 4,
     videoId: "kYLBNEn7KVI",
-    client:
-      " Fast, reliable, and insanely talented. He took my rough footage and turned it into something I was proud to upload. Couldn't recommend enough!",
+    client: " Exactly what I was looking for.",
     kuro: "Thank you",
     clientName: "Waffloos Plus",
     imageSrc: "/4.jpg",
@@ -32,8 +29,7 @@ export const videos = [
   {
     id: 6,
     videoId: "0H6bGdsGpOs",
-    client:
-      " One of the smoothest collaborations I've had. Kuro not only edits but also understands content strategy. The videos performed way better after his touch.",
+    client: " I don’t even have notes, this is perfect.",
     kuro: "Thank you for the feedback",
     clientName: "Specular Drama",
     imageSrc: "/7.jpg",
