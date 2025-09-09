@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 
 export const ProjectView = () => {
   return (
-    <div>
-      <div className="px-2 md:px-0">
+    <div className="px-2 md:px-0">
+      <div className="">
         <div className="max-w-5xl mx-auto relative flex items-center justify-center h-20">
           {/* Left & Right dashed borders */}
           <div className="absolute inset-0 -z-10 border-l-[1.5px] border-r-[1.5px] border-spaced-vertical" />
@@ -24,8 +24,11 @@ export const ProjectView = () => {
               <div key={video.id} className="col-span-1 w-full">
                 <ProjectCard
                   videoId={video.videoId}
-                  title={video.title}
-                  description={video.description}
+                  client={video.client}
+                  kuro={video.kuro}
+                  clientName={video.clientName}
+                  imageSrc={video.imageSrc}
+                  youtubeStats={video.youtubeStats}
                 />
               </div>
             ))}

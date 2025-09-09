@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kuro - A Magician's Journal",
+  title: "Kuro | A Magician's Journal",
   description: "made by @devansh",
 };
 

@@ -11,7 +11,7 @@ const shorts = [
 
 export const ShortVideoView = () => {
   return (
-    <div>
+    <div className="px-2 md:px-0">
       {/* Header */}
       <div
         className={`

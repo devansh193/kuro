@@ -54,7 +54,7 @@ export function KuroLogo() {
           opacity: 0,
           scale: 0,
           bottom: "-20px",
-          right: "10px",
+          right: "40px",
           rotate: -90,
           transition: { duration: 0.15, ease: "easeInOut" },
         });

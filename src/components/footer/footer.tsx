@@ -1,14 +1,24 @@
 export const Footer = () => {
   return (
     <footer className="w-full">
-      {/* Top border section */}
-      <div className="w-full border-t-[1.5px] border-b-[1.5px] border-spaced-horizontal h-16">
-        <div className="mx-[50px] px-10 border-l-[1.5px] border-r-[1.5px] border-spaced-vertical h-full bg-[#EDEDED] flex items-center justify-between flex-wrap">
-          <p className="text-sm text-gray-700">
+      <div className="w-full border-t-[1.5px] border-b-[1.5px] border-spaced-horizontal">
+        <div
+          className="
+            mx-4 sm:mx-8 md:mx-12 lg:mx-[50px] 
+            px-4 sm:px-6 md:px-10 
+            border-l-[1.5px] border-r-[1.5px] border-spaced-vertical 
+            bg-[#EDEDED] 
+            flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 
+            py-4
+          "
+        >
+          <p className="text-xs sm:text-sm text-gray-700 text-center sm:text-left">
             © 2025 Kuro. All rights reserved.
           </p>
-          <span className="font-semibold text-4xl mr-10">Kuro</span>
-          <div className="flex gap-4 text-sm">
+          <span className="hidden md:block font-semibold text-2xl sm:text-3xl md:text-4xl">
+            Kuro
+          </span>
+          <div className="flex gap-4 text-xs sm:text-sm flex-wrap justify-center">
             <a href="#" className="hover:underline">
               X
             </a>
@@ -21,9 +31,7 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-
-      {/* Bottom border section */}
-      <div className="mx-[50px] h-12 border-l-[1.5px] border-r-[1.5px] border-spaced-vertical" />
+      <div className="mx-4 sm:mx-8 md:mx-12 lg:mx-[50px] border-l-[1.5px] border-r-[1.5px] border-spaced-vertical py-3" />
     </footer>
   );
 };

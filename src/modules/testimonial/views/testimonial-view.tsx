@@ -2,48 +2,61 @@ import { TestimonialCard } from "../components/ui/testimonial-card";
 
 export const TestimonialView = () => {
   return (
-    <div>
+    <div className="px-2 md:px-0">
       <div className="max-w-5xl mx-auto border-l-[1.5px] border-r-[1.5px] border-spaced-vertical">
+        {/* Header */}
         <div className="border-b-[1.5px] border-spaced-horizontal h-20 flex items-center justify-center">
           <h1
             className={`
-            /* typography */
-            font-sans font-semibold text-2xl md:text-5xl
-            /* interactivity */
-            selection:bg-black selection:text-white
-          `}
+              font-sans font-semibold text-2xl sm:text-3xl md:text-5xl
+              selection:bg-black selection:text-white text-center
+            `}
           >
             WHAT PEOPLE SAY
           </h1>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-150 p-4">
-          <div className="col-span-1 w-full h-full flex flex-col items-center justify-center gap-4">
+
+        {/* Testimonials Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 min-h-150">
+          {/* Left column */}
+          <div className="flex flex-col  gap-6">
             <TestimonialCard
-              authorName="John Doe"
+              authorName="Ryan Pictures"
               imageSrc="/1.jpg"
-              className="h-3/4 w-full flex items-center justify-center border rounded-3xl"
+              className="flex-1 w-full border rounded-3xl flex items-center justify-center"
+              testimonialText="Kuro was one of my first editors who helped me get my first big videos on YouTube. He's an OG, high quality edits, and great to work with. Highly recommended!"
+              designation="380k+ Subscribers"
             />
             <TestimonialCard
-              authorName="Jane Smith"
+              authorName="Pepezilla"
               imageSrc="/2.jpg"
-              className="h-1/4 w-full border rounded-3xl flex items-center justify-center"
+              className="flex-1 w-full border rounded-3xl flex items-center justify-center"
+              testimonialText="Super creative guy. Always on time. The ideas and the quality of the videos are just something else !!!"
+              designation="Youtuber"
             />
           </div>
+
+          {/* Middle column */}
           <TestimonialCard
             authorName="Alice Johnson"
             imageSrc="/3.jpg"
-            className="col-span-1 w-full flex items-center justify-center border rounded-3xl"
+            className="w-full border rounded-3xl flex items-center justify-center"
+            testimonialText="Fast, reliable, and insanely talented. He took my rough footage and turned it into something I was proud to upload. Couldn't recommend enough!"
           />
-          <div className="col-span-1 w-full flex flex-col items-center justify-center gap-4">
+
+          {/* Right column */}
+          <div className="flex flex-col gap-6">
             <TestimonialCard
               authorName="Bob Brown"
               imageSrc="/4.jpg"
-              className="h-1/2 w-full border rounded-3xl flex items-center justify-center"
+              className="flex-1 w-full border rounded-3xl flex items-center justify-center"
+              testimonialText="One of the smoothest collaborations I’ve had. Kuro not only edits but also understands content strategy. The videos performed way better after his touch."
             />
             <TestimonialCard
-              authorName=""
+              authorName="Anonymous"
               imageSrc="/5.jpg"
-              className="h-1/2 w-full border rounded-3xl flex items-center justify-center"
+              className="flex-1 w-full border rounded-3xl flex items-center justify-center"
+              testimonialText="Kuro just gets it. Every edit feels like it’s made to keep viewers hooked till the very end. Super easy to work with and always brings fresh ideas."
             />
           </div>
         </div>
