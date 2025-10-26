@@ -41,7 +41,9 @@ export const HomeView = () => {
             "-z-10"
           )}
         />
-        <h1>Hi there</h1>
+        <h1 className="font-semibold text-lg font-phudu selection-black">
+          WORK WITH KURO
+        </h1>
         <motion.div
           className={cn(
             // Typography
@@ -80,7 +82,7 @@ export const HomeView = () => {
         <motion.h1
           className={cn(
             // Typography
-            "text-xl text-[#000] font-medium text-center selection-black",
+            "text-xl text-[#000] font-medium font-phudu text-center selection-black",
             // Sizing
             "max-w-2xl"
           )}

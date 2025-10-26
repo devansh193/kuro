@@ -14,7 +14,6 @@ export function KuroLogo() {
 
     const runSequence = async () => {
       if (isHovered) {
-        // Hover enter sequence
         await pointerControls.start({
           opacity: 1,
           scale: 1.1,
