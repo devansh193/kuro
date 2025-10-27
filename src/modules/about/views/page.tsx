@@ -37,11 +37,11 @@ export const AboutView = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
-            className="text-lg sm:text-xl font-medium text-neutral-200 font-phudu max-w-3xl selection-white"
+            className="group text-lg sm:text-xl font-medium text-neutral-200 font-phudu max-w-3xl selection-white"
           >
             Ready to elevate your content? Let&apos;s{" "}
             <motion.span
-              className="underline px-[3px] cursor-pointer"
+              className="underline underline-offset-3 p-[3px] cursor-pointer"
               whileHover={{
                 backgroundColor: "#ffffff",
                 color: "#000000",

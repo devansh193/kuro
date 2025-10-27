@@ -1,9 +1,7 @@
-import Link from "next/link";
-
 const socials = [
   {
     name: "X",
-    url: "x.com/workwithkuro",
+    url: "https://x.com/workwithkuro",
     icon: (
       <svg
         width="30"
@@ -76,11 +74,11 @@ export const Socials = () => {
     <div className="flex flex-row items-center justify-start gap-x-4 mt-4 bg-transparent">
       {socials.map((social, index) => (
         <div key={index}>
-          <Link href={social.url} target="_blank">
+          <a href={social.url} target="_blank">
             <div className="flex items-center justify-center p-1 h-12 w-12">
               {social.icon}
             </div>
-          </Link>
+          </a>
         </div>
       ))}
     </div>
