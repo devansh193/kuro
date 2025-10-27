@@ -36,7 +36,7 @@ export const TestimonialView = () => {
               imageSrc="/2.jpg"
               className="flex-1 w-full border rounded-3xl flex items-center justify-center"
               testimonialText="Super creative guy. Always on time. The ideas and the quality of the videos are just something else !!!"
-              designation="Youtuber"
+              designation="!80k+ Subscribers"
             />
           </div>
 
