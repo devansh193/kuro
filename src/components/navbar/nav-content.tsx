@@ -2,9 +2,9 @@
 import { motion } from "framer-motion";
 
 const items = [
-  { label: "Home", href: "/" },
-  { label: "Work", href: "#work" },
-  { label: "About Me", href: "#projects" },
+  { label: "Home", href: "#home" },
+  { label: "Work", href: "#projects" },
+  { label: "About Me", href: "#about" },
 ];
 
 export const NavContent = () => {
@@ -23,9 +23,12 @@ export const NavContent = () => {
           }}
           className="relative cursor-pointer"
         >
-          <span className="text-[#747474] hover:text-black selection:bg-black font-sans selection:text-white font-medium transition-colors duration-200 tracking-tight">
+          <a
+            href={item.href}
+            className="text-[#747474] hover:text-black selection:bg-black font-sans selection:text-white font-medium transition-colors duration-200 tracking-tight"
+          >
             {item.label}
-          </span>
+          </a>
         </motion.div>
       ))}
     </div>

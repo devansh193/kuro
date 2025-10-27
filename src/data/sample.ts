@@ -12,23 +12,23 @@ export const sampleAvatars: Avatar[] = [
     src: "/2.jpg",
   },
   {
-    name: "malice",
-    src: "/3.jpg",
+    name: "DV",
+    src: "/dv.jpg",
   },
   {
-    name: "waffloose plus",
-    src: "/4.jpg",
+    name: "Noxiee",
+    src: "/noxiee.png",
   },
   {
-    name: "food with chetna",
-    src: "/5.jpg",
+    name: "MJ",
+    src: "/mj.png",
   },
   {
-    name: "waffy",
-    src: "/6.jpg",
+    name: "Venom",
+    src: "/venom.png",
   },
-  {
-    name: "specular",
-    src: "/7.jpg",
-  },
+  // {
+  //   name: "specular",
+  //   src: "/7.jpg",
+  // },
 ];

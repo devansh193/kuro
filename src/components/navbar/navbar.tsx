@@ -15,8 +15,8 @@ export const Navbar = () => {
           <div className="hidden md:block">
             <NavContent />
           </div>
-          <Button className="rounded-full text-xs md:text-[16px]">
-            Contact Me
+          <Button asChild className="rounded-xl text-xs md:text-[16px]">
+            <a href="#about">Contact Me</a>
           </Button>
         </div>
       </div>

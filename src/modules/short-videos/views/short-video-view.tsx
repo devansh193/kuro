@@ -1,17 +1,21 @@
 import { ShortVideo } from "../components/ui/short-video";
 
 const shorts = [
-  { shortId: "17XEA_igj7U" },
-  { shortId: "yGpq9KxJ7G8" },
-  { shortId: "LYAzGG9VV90" },
-  { shortId: "UBuAwfx9h90" },
-  { shortId: "yGpq9KxJ7G8" },
-  { shortId: "LYAzGG9VV90" },
+  { shortId: "ve88PYjFzRU" },
+  { shortId: "8wV-h3iVKMU" },
+  { shortId: "ve88PYjFzRU" },
+  { shortId: "8wV-h3iVKMU" },
+  { shortId: "ve88PYjFzRU" },
+  { shortId: "8wV-h3iVKMU" },
 ];
 
 export const ShortVideoView = () => {
   return (
-    <div className="px-2 md:px-0">
+    <div
+      id="shorts"
+      style={{ scrollMarginTop: "5rem" }}
+      className="px-2 md:px-0"
+    >
       {/* Header */}
       <div
         className={`

@@ -2,7 +2,11 @@ import { TestimonialCard } from "../components/ui/testimonial-card";
 
 export const TestimonialView = () => {
   return (
-    <div className="px-2 md:px-0">
+    <div
+      id="testimonials"
+      style={{ scrollMarginTop: "5rem" }}
+      className="px-2 md:px-0"
+    >
       <div className="max-w-5xl mx-auto border-l-[1.5px] border-r-[1.5px] border-spaced-vertical">
         {/* Header */}
         <div className="border-b-[1.5px] border-spaced-horizontal h-20 flex items-center justify-center">
@@ -38,8 +42,8 @@ export const TestimonialView = () => {
 
           {/* Middle column */}
           <TestimonialCard
-            authorName="Alice Johnson"
-            imageSrc="/3.jpg"
+            authorName="Noxiee"
+            imageSrc="/noxiee.png"
             className="w-full border rounded-3xl flex items-center justify-center"
             testimonialText="Fast, reliable, and insanely talented. He took my rough footage and turned it into something I was proud to upload. Couldn't recommend enough!"
           />
@@ -47,16 +51,16 @@ export const TestimonialView = () => {
           {/* Right column */}
           <div className="flex flex-col gap-6">
             <TestimonialCard
-              authorName="Bob Brown"
-              imageSrc="/4.jpg"
+              authorName="MJ"
+              imageSrc="/mj.png"
               className="flex-1 w-full border rounded-3xl flex items-center justify-center"
-              testimonialText="One of the smoothest collaborations I’ve had. Kuro not only edits but also understands content strategy. The videos performed way better after his touch."
+              testimonialText="One of the smoothest collaborations I've had. Kuro not only edits but also understands content strategy. The videos performed way better after his touch."
             />
             <TestimonialCard
-              authorName="Anonymous"
-              imageSrc="/5.jpg"
+              authorName="Venom"
+              imageSrc="/venom.png"
               className="flex-1 w-full border rounded-3xl flex items-center justify-center"
-              testimonialText="Kuro just gets it. Every edit feels like it’s made to keep viewers hooked till the very end. Super easy to work with and always brings fresh ideas."
+              testimonialText="Kuro just gets it. Every edit feels like it's made to keep viewers hooked till the very end. Super easy to work with and always brings fresh ideas."
             />
           </div>
         </div>

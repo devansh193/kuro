@@ -5,7 +5,11 @@ import { motion } from "framer-motion";
 
 export const ProjectView = () => {
   return (
-    <div className="px-2 md:px-0">
+    <div
+      id="projects"
+      style={{ scrollMarginTop: "5rem" }}
+      className="px-2 md:px-0"
+    >
       <div className="">
         <div className="max-w-5xl mx-auto relative flex items-center justify-center h-20">
           {/* Left & Right dashed borders */}

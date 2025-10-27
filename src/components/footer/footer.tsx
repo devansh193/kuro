@@ -15,17 +15,25 @@ export const Footer = () => {
           <p className="text-xs sm:text-sm text-gray-700 text-center sm:text-left">
             © 2025 Kuro. All rights reserved.
           </p>
-          <span className="hidden md:block font-semibold text-2xl sm:text-3xl md:text-4xl">
-            Kuro
+          <span className="hidden md:block font-semibold text-2xl sm:text-3xl md:text-4xl font-phudu ">
+            <a href="#home">KURO</a>
           </span>
           <div className="flex gap-4 text-xs sm:text-sm flex-wrap justify-center">
-            <a href="#" className="hover:underline">
+            <a
+              href="https://x.com/workwithkuro"
+              target="_blank"
+              className="hover:underline"
+            >
               X
             </a>
-            <a href="#" className="hover:underline">
-              Instagram
+            <a
+              href=" https://discord.com/users/710889197124321351"
+              target="_blank"
+              className="hover:underline"
+            >
+              Discord
             </a>
-            <a href="mailto:example@email.com" className="hover:underline">
+            <a href="mailto:workwithkuro@gmail.com" className="hover:underline">
               Email
             </a>
           </div>

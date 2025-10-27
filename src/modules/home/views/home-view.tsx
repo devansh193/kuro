@@ -2,7 +2,6 @@
 import { DottedBackground } from "@/modules/home/components/ui/dotted-background";
 import { ContainerTextFlip } from "@/modules/home/components/ui/text-rotate";
 import { AvatarGroup } from "@/components/avatar-group";
-import { Button } from "@/components/ui/button";
 import { sampleAvatars } from "@/data/sample";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -10,6 +9,8 @@ import { cn } from "@/lib/utils";
 export const HomeView = () => {
   return (
     <div
+      id="home"
+      style={{ scrollMarginTop: "5rem" }}
       className={cn(
         // Positioning
         "relative",
@@ -92,25 +93,6 @@ export const HomeView = () => {
         >
           Where creativity meets precision in every frame
         </motion.h1>
-        <motion.div
-          initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <Button
-            size={"lg"}
-            className={cn(
-              // Shape
-              "rounded-full",
-              // Spacing
-              "px-8 py-6",
-              // Typography
-              "text-xl"
-            )}
-          >
-            Let&apos;s Go
-          </Button>
-        </motion.div>
       </div>
       <div
         className={cn(
