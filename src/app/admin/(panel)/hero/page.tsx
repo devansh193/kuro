@@ -1,44 +1,114 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { usePortfolioContent } from "@/lib/portfolio/portfolio-provider";
+import { useEffect, useRef } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { isEqual } from "lodash";
 import { Minus, Plus } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { hasChanges, pickChangedRecord } from "@/lib/portfolio/pick-changed";
+import { usePortfolioContent } from "@/lib/portfolio/portfolio-provider";
+import type { PortfolioContent } from "@/lib/portfolio/types";
+
+type HeroFormValues = {
+  eyebrow: string;
+  leadIn: string;
+  tagline: string;
+  rotatingPhrases: { value: string }[];
+};
+
+type SectionsFormValues = PortfolioContent["sections"];
+
+function heroToForm(hero: PortfolioContent["hero"]): HeroFormValues {
+  return {
+    eyebrow: hero.eyebrow,
+    leadIn: hero.leadIn,
+    tagline: hero.tagline,
+    rotatingPhrases: hero.rotatingPhrases.map((text) => ({ value: text })),
+  };
+}
+
+function formToHero(values: HeroFormValues): PortfolioContent["hero"] {
+  return {
+    eyebrow: values.eyebrow,
+    leadIn: values.leadIn,
+    tagline: values.tagline,
+    rotatingPhrases: values.rotatingPhrases.map((r) => r.value),
+  };
+}
+
 export default function AdminHeroPage() {
-  const { content, setContent } = usePortfolioContent();
-  const { hero, sections } = content;
+  const { content, setContent, savePortfolio } = usePortfolioContent();
 
-  const setHero = (patch: Partial<typeof hero>) => {
+  const heroForm = useForm<HeroFormValues>({
+    defaultValues: heroToForm(content.hero),
+  });
+
+  const sectionsForm = useForm<SectionsFormValues>({
+    defaultValues: content.sections,
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: heroForm.control,
+    name: "rotatingPhrases",
+  });
+
+  const heroSnapshot = useRef(content.hero);
+  const sectionsSnapshot = useRef(content.sections);
+  const prevHero = useRef(content.hero);
+  const prevSections = useRef(content.sections);
+
+  useEffect(() => {
+    if (!isEqual(content.hero, prevHero.current)) {
+      prevHero.current = content.hero;
+      heroForm.reset(heroToForm(content.hero));
+      heroSnapshot.current = content.hero;
+    }
+  }, [content, heroForm]);
+
+  useEffect(() => {
+    if (!isEqual(content.sections, prevSections.current)) {
+      prevSections.current = content.sections;
+      sectionsForm.reset(content.sections);
+      sectionsSnapshot.current = content.sections;
+    }
+  }, [content, sectionsForm]);
+
+  const onHeroSubmit = (values: HeroFormValues) => {
+    const nextHero = formToHero(values);
+    const patch = pickChangedRecord(
+      nextHero as Record<string, unknown>,
+      heroSnapshot.current as Record<string, unknown>,
+    );
+    if (!hasChanges(patch)) return;
     setContent((c) => ({
       ...c,
-      hero: { ...c.hero, ...patch },
+      hero: { ...c.hero, ...(patch as Partial<PortfolioContent["hero"]>) },
     }));
+    savePortfolio();
   };
 
-  const setSections = (patch: Partial<typeof sections>) => {
+  const onSectionsSubmit = (values: SectionsFormValues) => {
+    const patch = pickChangedRecord(
+      values as Record<string, unknown>,
+      sectionsSnapshot.current as Record<string, unknown>,
+    );
+    if (!hasChanges(patch)) return;
     setContent((c) => ({
       ...c,
-      sections: { ...c.sections, ...patch },
+      sections: { ...c.sections, ...(patch as Partial<SectionsFormValues>) },
     }));
-  };
-
-  const updatePhrase = (index: number, value: string) => {
-    const next = [...hero.rotatingPhrases];
-    next[index] = value;
-    setHero({ rotatingPhrases: next });
-  };
-
-  const addPhrase = () => {
-    setHero({ rotatingPhrases: [...hero.rotatingPhrases, "New phrase"] });
-  };
-
-  const removePhrase = (index: number) => {
-    if (hero.rotatingPhrases.length <= 1) return;
-    setHero({
-      rotatingPhrases: hero.rotatingPhrases.filter((_, i) => i !== index),
-    });
+    savePortfolio();
   };
 
   return (
@@ -50,96 +120,163 @@ export default function AdminHeroPage() {
         </p>
       </div>
 
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="eyebrow">Eyebrow</Label>
-          <Input
-            id="eyebrow"
-            value={hero.eyebrow}
-            onChange={(e) => setHero({ eyebrow: e.target.value })}
+      <Form {...heroForm}>
+        <form
+          onSubmit={heroForm.handleSubmit(onHeroSubmit)}
+          className="space-y-4"
+        >
+          <FormField
+            control={heroForm.control}
+            name="eyebrow"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Eyebrow</FormLabel>
+                <FormControl>
+                  <Input {...field} id="eyebrow" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="leadIn">Lead-in (before rotating text)</Label>
-          <Input
-            id="leadIn"
-            value={hero.leadIn}
-            onChange={(e) => setHero({ leadIn: e.target.value })}
+          <FormField
+            control={heroForm.control}
+            name="leadIn"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Lead-in (before rotating text)</FormLabel>
+                <FormControl>
+                  <Input {...field} id="leadIn" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="space-y-2">
-          <Label>Rotating phrases</Label>
-          <p className="text-xs text-muted-foreground">
-            Shown in the animated flip; order matches the list.
-          </p>
-          <ul className="space-y-2">
-            {hero.rotatingPhrases.map((phrase, i) => (
-              <li key={i} className="flex gap-2 items-center">
-                <Input
-                  value={phrase}
-                  onChange={(e) => updatePhrase(i, e.target.value)}
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => removePhrase(i)}
-                  disabled={hero.rotatingPhrases.length <= 1}
-                  aria-label="Remove phrase"
-                >
-                  <Minus className="size-4" />
-                </Button>
-              </li>
-            ))}
-          </ul>
-          <Button type="button" variant="secondary" size="sm" onClick={addPhrase}>
-            <Plus className="size-4" />
-            Add phrase
+          <div className="space-y-2">
+            <Label>Rotating phrases</Label>
+            <p className="text-xs text-muted-foreground">
+              Shown in the animated flip; order matches the list.
+            </p>
+            <ul className="space-y-2">
+              {fields.map((field, i) => (
+                <li key={field.id} className="flex gap-2 items-center">
+                  <FormField
+                    control={heroForm.control}
+                    name={`rotatingPhrases.${i}.value`}
+                    render={({ field: phraseField }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <Input {...phraseField} className="flex-1" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => remove(i)}
+                    disabled={fields.length <= 1}
+                    aria-label="Remove phrase"
+                  >
+                    <Minus className="size-4" />
+                  </Button>
+                </li>
+              ))}
+            </ul>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => append({ value: "New phrase" })}
+            >
+              <Plus className="size-4" />
+              Add phrase
+            </Button>
+          </div>
+          <FormField
+            control={heroForm.control}
+            name="tagline"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tagline</FormLabel>
+                <FormControl>
+                  <Input {...field} id="tagline" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            disabled={
+              !heroForm.formState.isDirty || heroForm.formState.isSubmitting
+            }
+          >
+            Save hero
           </Button>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="tagline">Tagline</Label>
-          <Input
-            id="tagline"
-            value={hero.tagline}
-            onChange={(e) => setHero({ tagline: e.target.value })}
-          />
-        </div>
-      </div>
+        </form>
+      </Form>
 
       <div className="border-t border-border pt-8 space-y-4">
         <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
           Section titles (optional)
         </h2>
-        <div className="space-y-2">
-          <Label htmlFor="projectsTitle">Long videos section title</Label>
-          <Input
-            id="projectsTitle"
-            value={sections.projectsTitle}
-            onChange={(e) =>
-              setSections({ projectsTitle: e.target.value })
-            }
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="shortsTitle">Shorts section title</Label>
-          <Input
-            id="shortsTitle"
-            value={sections.shortsTitle}
-            onChange={(e) => setSections({ shortsTitle: e.target.value })}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="testimonialsTitle">Testimonials section title</Label>
-          <Input
-            id="testimonialsTitle"
-            value={sections.testimonialsTitle}
-            onChange={(e) =>
-              setSections({ testimonialsTitle: e.target.value })
-            }
-          />
-        </div>
+        <Form {...sectionsForm}>
+          <form
+            onSubmit={sectionsForm.handleSubmit(onSectionsSubmit)}
+            className="space-y-4"
+          >
+            <FormField
+              control={sectionsForm.control}
+              name="projectsTitle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Long videos section title</FormLabel>
+                  <FormControl>
+                    <Input {...field} id="projectsTitle" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={sectionsForm.control}
+              name="shortsTitle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Shorts section title</FormLabel>
+                  <FormControl>
+                    <Input {...field} id="shortsTitle" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={sectionsForm.control}
+              name="testimonialsTitle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Testimonials section title</FormLabel>
+                  <FormControl>
+                    <Input {...field} id="testimonialsTitle" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              disabled={
+                !sectionsForm.formState.isDirty ||
+                sectionsForm.formState.isSubmitting
+              }
+            >
+              Save section titles
+            </Button>
+          </form>
+        </Form>
       </div>
     </div>
   );

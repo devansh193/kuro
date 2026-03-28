@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useRef } from "react";
 import { usePortfolioContent } from "@/lib/portfolio/portfolio-provider";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { ADMIN_NAV } from "../admin-nav";
 
@@ -25,8 +26,12 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       if (!res.ok) throw new Error("Logout failed");
     },
     onSuccess: () => {
+      toast.success("Signed out");
       router.replace("/admin/login");
       router.refresh();
+    },
+    onError: (e) => {
+      toast.error(e instanceof Error ? e.message : "Logout failed");
     },
   });
 
@@ -39,14 +44,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     try {
       await importJsonFile(file);
     } catch {
-      window.alert("Invalid JSON file. Please export a backup and try again.");
+      // Invalid JSON or save failure — provider already toasts specifics
     }
   };
 
   const onReset = () => {
     if (
       window.confirm(
-        "Reset all content to built-in defaults? This cannot be undone unless you exported JSON."
+        "Reset all content to built-in defaults? This cannot be undone unless you exported JSON.",
       )
     ) {
       resetToDefaults();
@@ -64,11 +69,16 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             >
               ← Site
             </Link>
-            <span className="text-sm font-semibold tracking-tight">Portfolio admin</span>
+            <span className="text-sm font-semibold tracking-tight">
+              Portfolio admin
+            </span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {loadError && (
-              <span className="text-xs text-destructive max-w-[14rem] truncate" title={loadError.message}>
+              <span
+                className="text-xs text-destructive max-w-[14rem] truncate"
+                title={loadError.message}
+              >
                 Load error — check DATABASE_URL
               </span>
             )}
@@ -91,13 +101,28 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               className="hidden"
               onChange={onFileChange}
             />
-            <Button type="button" variant="outline" size="sm" onClick={onImportClick}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onImportClick}
+            >
               Import JSON
             </Button>
-            <Button type="button" variant="outline" size="sm" onClick={exportJson}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={exportJson}
+            >
               Export JSON
             </Button>
-            <Button type="button" variant="destructive" size="sm" onClick={onReset}>
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              onClick={onReset}
+            >
               Reset defaults
             </Button>
           </div>
@@ -116,7 +141,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                     "rounded-md px-3 py-2 text-sm transition-colors",
                     active
                       ? "bg-muted font-medium text-foreground"
-                      : "text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                      : "text-muted-foreground hover:bg-muted/80 hover:text-foreground",
                   )}
                 >
                   {item.label}
@@ -136,7 +161,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               "rounded-md px-2 py-1.5 text-xs",
               pathname === item.href
                 ? "bg-muted font-medium"
-                : "text-muted-foreground"
+                : "text-muted-foreground",
             )}
           >
             {item.label}

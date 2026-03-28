@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Phudu } from "next/font/google";
 import { AppProviders } from "@/app/providers";
+import { DEFAULT_PORTFOLIO_CONTENT } from "@/lib/portfolio/defaults";
+import { getPortfolioContent } from "@/lib/portfolio/get-portfolio-content";
 import { PortfolioConfigProvider } from "@/lib/portfolio/portfolio-provider";
 import "./globals.css";
 
@@ -24,18 +26,32 @@ export const metadata: Metadata = {
   description: "made by @devansh",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let initialPortfolio = DEFAULT_PORTFOLIO_CONTENT;
+  let initialFetchedAt = 0;
+  try {
+    initialPortfolio = await getPortfolioContent();
+    initialFetchedAt = Date.now();
+  } catch (e) {
+    console.error(e);
+  }
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${phudu.variable} antialiased`}
       >
         <AppProviders>
-          <PortfolioConfigProvider>{children}</PortfolioConfigProvider>
+          <PortfolioConfigProvider
+            initialPortfolio={initialPortfolio}
+            initialFetchedAt={initialFetchedAt}
+          >
+            {children}
+          </PortfolioConfigProvider>
         </AppProviders>
       </body>
     </html>

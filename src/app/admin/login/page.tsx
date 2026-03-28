@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -34,8 +35,12 @@ function AdminLoginForm() {
       }
     },
     onSuccess: () => {
+      toast.success("Signed in");
       router.replace("/admin");
       router.refresh();
+    },
+    onError: (e) => {
+      toast.error(e instanceof Error ? e.message : "Sign-in failed");
     },
   });
 

@@ -21,7 +21,7 @@ export const HomeView = () => {
         // Sizing
         "w-full",
         // Spacing
-        "px-2 md:px-0"
+        "px-2 md:px-0",
       )}
     >
       <div
@@ -35,7 +35,7 @@ export const HomeView = () => {
           // Positioning
           "relative",
           // Borders
-          "border-spaced-vertical border-l-[1.5px] border-r-[1.5px]"
+          "border-spaced-vertical border-l-[1.5px] border-r-[1.5px]",
         )}
       >
         <DottedBackground
@@ -43,7 +43,7 @@ export const HomeView = () => {
             // Positioning
             "absolute inset-0",
             // Layering
-            "-z-10"
+            "-z-10",
           )}
         />
         <h1 className="font-semibold text-lg font-phudu selection-black">
@@ -54,9 +54,9 @@ export const HomeView = () => {
             // Typography
             "text-5xl md:text-6xl font-bold font-phudu text-center selection-black",
             // Sizing/Layout
-            "max-w-[680px] mx-auto",
+            "w-full mx-auto",
             // Positioning
-            "relative"
+            "relative",
           )}
           initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -66,16 +66,33 @@ export const HomeView = () => {
           }}
         >
           {hero.leadIn}
+        </motion.div>
+        <motion.div
+          className={cn(
+            // Typography
+            "text-5xl md:text-6xl font-bold font-phudu text-center selection-black",
+            // Sizing/Layout
+            "max-w-[680px] mx-auto",
+            // Positioning
+            "relative",
+          )}
+          initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{
+            duration: 0.5,
+            delay: 0.2,
+          }}
+        >
           <ContainerTextFlip
             className={cn(
               // Visual
               "bg-transparent",
               // Spacing
-              "m-2"
+              "m-2",
             )}
             textClassName={cn(
               // Typography
-              "text-2xl md:text-6xl"
+              "text-2xl md:text-6xl",
             )}
             words={hero.rotatingPhrases}
           />
@@ -85,7 +102,7 @@ export const HomeView = () => {
             // Typography
             "text-xl text-[#000] font-medium font-phudu text-center selection-black",
             // Sizing
-            "max-w-2xl"
+            "max-w-2xl",
           )}
           initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -101,7 +118,7 @@ export const HomeView = () => {
           // Sizing
           "w-full h-15 md:h-20",
           // Layout
-          "flex items-center justify-center"
+          "flex items-center justify-center",
         )}
       >
         <div
@@ -111,7 +128,7 @@ export const HomeView = () => {
             // Layout
             "flex items-center justify-center",
             // Positioning
-            "relative"
+            "relative",
           )}
         >
           {/* Bottom  */}
@@ -120,7 +137,7 @@ export const HomeView = () => {
               // Positioning
               "absolute top-0 left-0 right-0",
               // Border
-              "border-b-[1.5px] border-spaced-horizontal"
+              "border-b-[1.5px] border-spaced-horizontal",
             )}
           />
           {/* Left border */}
@@ -129,7 +146,7 @@ export const HomeView = () => {
               // Positioning
               "absolute top-0 bottom-0 left-0",
               // Border
-              "border-l-[1.5px] border-spaced-vertical"
+              "border-l-[1.5px] border-spaced-vertical",
             )}
           />
           {/* Right border */}
@@ -138,7 +155,7 @@ export const HomeView = () => {
               // Positioning
               "absolute top-0 bottom-0 right-0",
               // Border
-              "border-r-[1.5px] border-spaced-vertical"
+              "border-r-[1.5px] border-spaced-vertical",
             )}
           />
           <AvatarGroup size="sm" avatars={sampleAvatars} />
@@ -149,7 +166,7 @@ export const HomeView = () => {
           // Sizing
           "w-full",
           // Border
-          "border-b-[1.5px] border-spaced-horizontal"
+          "border-b-[1.5px] border-spaced-horizontal",
         )}
       />
     </div>
