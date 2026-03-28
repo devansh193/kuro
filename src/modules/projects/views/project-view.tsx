@@ -1,9 +1,12 @@
 "use client";
-import { videos } from "@/data/videos";
+import { usePortfolioContent } from "@/lib/portfolio/portfolio-provider";
 import { ProjectCard } from "../components/ui/project-card";
 import { motion } from "framer-motion";
 
 export const ProjectView = () => {
+  const { content } = usePortfolioContent();
+  const { videos, sections } = content;
+
   return (
     <div
       id="projects"
@@ -17,7 +20,7 @@ export const ProjectView = () => {
           {/* Bottom dashed border */}
           <div className="absolute bottom-0 left-0 w-full border-b-[1.5px] -z-10 border-spaced-horizontal" />
           <h1 className="font-sans font-semibold text-2xl md:text-5xl selection:bg-black selection:text-white">
-            THE LONG PLAY
+            {sections.projectsTitle}
           </h1>
         </div>
 

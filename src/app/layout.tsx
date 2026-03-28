@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Phudu } from "next/font/google";
+import { AppProviders } from "@/app/providers";
+import { PortfolioConfigProvider } from "@/lib/portfolio/portfolio-provider";
 import "./globals.css";
 
 const phudu = Phudu({
@@ -32,7 +34,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${phudu.variable} antialiased`}
       >
-        {children}
+        <AppProviders>
+          <PortfolioConfigProvider>{children}</PortfolioConfigProvider>
+        </AppProviders>
       </body>
     </html>
   );

@@ -1,4 +1,11 @@
+"use client";
+
+import { usePortfolioContent } from "@/lib/portfolio/portfolio-provider";
+
 export const Footer = () => {
+  const { content } = usePortfolioContent();
+  const { footer, socialLinks } = content;
+
   return (
     <footer className="w-full">
       <div className="w-full border-t-[1.5px] border-b-[1.5px] border-spaced-horizontal">
@@ -13,29 +20,27 @@ export const Footer = () => {
           "
         >
           <p className="text-xs sm:text-sm text-gray-700 text-center sm:text-left">
-            © 2025 Kuro. All rights reserved.
+            © {footer.copyrightYear} {footer.copyrightName}. All rights reserved.
           </p>
           <span className="hidden md:block font-semibold text-2xl sm:text-3xl md:text-4xl font-phudu ">
             <a href="#home">KURO</a>
           </span>
           <div className="flex gap-4 text-xs sm:text-sm flex-wrap justify-center">
-            <a
-              href="https://x.com/workwithkuro"
-              target="_blank"
-              className="hover:underline"
-            >
-              X
-            </a>
-            <a
-              href=" https://discord.com/users/710889197124321351"
-              target="_blank"
-              className="hover:underline"
-            >
-              Discord
-            </a>
-            <a href="mailto:workwithkuro@gmail.com" className="hover:underline">
-              Email
-            </a>
+            {socialLinks.map((link) => {
+              const isMail = link.url.startsWith("mailto:");
+              return (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  className="hover:underline"
+                  {...(isMail
+                    ? {}
+                    : { target: "_blank", rel: "noopener noreferrer" })}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </div>
         </div>
       </div>

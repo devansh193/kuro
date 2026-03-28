@@ -1,9 +1,13 @@
 "use client";
 
+import { usePortfolioContent } from "@/lib/portfolio/portfolio-provider";
 import { motion } from "framer-motion";
 import { Socials } from "../socials";
 
 export const AboutView = () => {
+  const { content } = usePortfolioContent();
+  const { about } = content;
+
   return (
     <section
       id="about"
@@ -28,10 +32,7 @@ export const AboutView = () => {
             transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
             className="text-lg sm:text-xl font-medium text-neutral-200 font-phudu max-w-3xl selection-white"
           >
-            I help content creators transform their ideas into visually
-            engaging, results-driven videos. From storytelling to editing and
-            polishing visuals — I bring creativity and clarity together to make
-            your content stand out.
+            {about.body}
           </motion.p>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -39,7 +40,7 @@ export const AboutView = () => {
             transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
             className="group text-lg sm:text-xl font-medium text-neutral-200 font-phudu max-w-3xl selection-white"
           >
-            Ready to elevate your content? Let&apos;s{" "}
+            {about.ctaPrefix}{" "}
             <motion.span
               className="underline underline-offset-3 p-[3px] cursor-pointer"
               whileHover={{
@@ -55,11 +56,11 @@ export const AboutView = () => {
                 ease: [0.25, 0.1, 0.25, 1],
               }}
             >
-              <a href=" https://x.com/workwithkuro" target="_blank">
-                connect
+              <a href={about.ctaUrl} target="_blank" rel="noopener noreferrer">
+                {about.ctaLinkText}
               </a>
-            </motion.span>{" "}
-            and make it happen!
+            </motion.span>
+            {about.ctaSuffix}
           </motion.p>
 
           <motion.div>
