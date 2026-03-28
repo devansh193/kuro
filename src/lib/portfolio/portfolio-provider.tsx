@@ -1,13 +1,15 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useRef,
   type ReactNode,
 } from "react";
 import { toast } from "sonner";
@@ -17,7 +19,9 @@ import type { PortfolioContent } from "./types";
 
 type PortfolioContextValue = {
   content: PortfolioContent;
-  setContent: (next: PortfolioContent | ((prev: PortfolioContent) => PortfolioContent)) => void;
+  setContent: (
+    next: PortfolioContent | ((prev: PortfolioContent) => PortfolioContent),
+  ) => void;
   savePortfolio: () => void;
   resetToDefaults: () => void;
   exportJson: () => void;
@@ -35,7 +39,10 @@ async function fetchPortfolio(): Promise<PortfolioContent> {
   const res = await fetch("/api/portfolio");
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    const msg = typeof err === "object" && err && "error" in err ? String((err as { error: unknown }).error) : res.statusText;
+    const msg =
+      typeof err === "object" && err && "error" in err
+        ? String((err as { error: unknown }).error)
+        : res.statusText;
     throw new Error(msg || "Failed to load portfolio");
   }
   const data = await res.json();
@@ -54,27 +61,23 @@ export function PortfolioConfigProvider({
   const queryClient = useQueryClient();
 
   const hasServerSeed = initialPortfolio !== undefined;
-  const query = useQuery({
+  const serverBaseline = useMemo(
+    () =>
+      initialPortfolio !== undefined
+        ? mergePortfolioContent(initialPortfolio)
+        : undefined,
+    [initialPortfolio],
+  );
+
+  const query = useSuspenseQuery({
     queryKey: portfolioQueryKey,
     queryFn: fetchPortfolio,
-    initialData: hasServerSeed ? initialPortfolio : undefined,
-    initialDataUpdatedAt: hasServerSeed ? (initialFetchedAt ?? Date.now()) : undefined,
+    initialData: hasServerSeed ? serverBaseline : undefined,
+    initialDataUpdatedAt: hasServerSeed
+      ? (initialFetchedAt ?? Date.now())
+      : undefined,
     staleTime: hasServerSeed && initialFetchedAt === 0 ? 0 : 30_000,
-    placeholderData: hasServerSeed ? undefined : DEFAULT_PORTFOLIO_CONTENT,
   });
-
-  const loadErrorNotified = useRef(false);
-  useEffect(() => {
-    const err = query.error;
-    if (err instanceof Error) {
-      if (!loadErrorNotified.current) {
-        loadErrorNotified.current = true;
-        toast.error(`Could not load portfolio: ${err.message}`);
-      }
-    } else {
-      loadErrorNotified.current = false;
-    }
-  }, [query.error]);
 
   const mutation = useMutation({
     mutationFn: async (body: PortfolioContent) => {
@@ -110,7 +113,9 @@ export function PortfolioConfigProvider({
   }, [queryClient, mutation]);
 
   const setContent = useCallback(
-    (next: PortfolioContent | ((prev: PortfolioContent) => PortfolioContent)) => {
+    (
+      next: PortfolioContent | ((prev: PortfolioContent) => PortfolioContent),
+    ) => {
       queryClient.setQueryData<PortfolioContent>(portfolioQueryKey, (prev) => {
         const base: PortfolioContent = prev ?? DEFAULT_PORTFOLIO_CONTENT;
         const resolved: PortfolioContent =
@@ -120,7 +125,7 @@ export function PortfolioConfigProvider({
         return mergePortfolioContent(resolved);
       });
     },
-    [queryClient]
+    [queryClient],
   );
 
   const resetToDefaults = useCallback(() => {
@@ -136,7 +141,9 @@ export function PortfolioConfigProvider({
   }, [queryClient, mutation]);
 
   const exportJson = useCallback(() => {
-    const content = queryClient.getQueryData<PortfolioContent>(portfolioQueryKey) ?? DEFAULT_PORTFOLIO_CONTENT;
+    const content =
+      queryClient.getQueryData<PortfolioContent>(portfolioQueryKey) ??
+      DEFAULT_PORTFOLIO_CONTENT;
     const blob = new Blob([JSON.stringify(content, null, 2)], {
       type: "application/json",
     });
@@ -155,7 +162,9 @@ export function PortfolioConfigProvider({
       try {
         parsed = JSON.parse(text) as unknown;
       } catch {
-        toast.error("Invalid JSON file. Use a backup exported from this admin.");
+        toast.error(
+          "Invalid JSON file. Use a backup exported from this admin.",
+        );
         throw new Error("Invalid JSON");
       }
       const merged = mergePortfolioContent(parsed);
@@ -169,10 +178,10 @@ export function PortfolioConfigProvider({
       });
       await promise;
     },
-    [queryClient, mutation]
+    [queryClient, mutation],
   );
 
-  const content = query.data ?? DEFAULT_PORTFOLIO_CONTENT;
+  const content = query.data;
 
   const value = useMemo<PortfolioContextValue>(
     () => ({
@@ -182,9 +191,9 @@ export function PortfolioConfigProvider({
       resetToDefaults,
       exportJson,
       importJsonFile,
-      isLoading: query.isLoading,
+      isLoading: query.isFetching,
       isSaving: mutation.isPending,
-      loadError: query.error instanceof Error ? query.error : null,
+      loadError: null,
     }),
     [
       content,
@@ -193,19 +202,24 @@ export function PortfolioConfigProvider({
       resetToDefaults,
       exportJson,
       importJsonFile,
-      query.isLoading,
-      query.error,
+      query.isFetching,
       mutation.isPending,
-    ]
+    ],
   );
 
-  return <PortfolioContext.Provider value={value}>{children}</PortfolioContext.Provider>;
+  return (
+    <PortfolioContext.Provider value={value}>
+      {children}
+    </PortfolioContext.Provider>
+  );
 }
 
 export function usePortfolioContent(): PortfolioContextValue {
   const ctx = useContext(PortfolioContext);
   if (!ctx) {
-    throw new Error("usePortfolioContent must be used within PortfolioConfigProvider");
+    throw new Error(
+      "usePortfolioContent must be used within PortfolioConfigProvider",
+    );
   }
   return ctx;
 }

@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono, Phudu } from "next/font/google";
 import { AppProviders } from "@/app/providers";
-import { DEFAULT_PORTFOLIO_CONTENT } from "@/lib/portfolio/defaults";
+import { PortfolioLoadingFallback } from "@/components/portfolio-loading-fallback";
 import { getPortfolioContent } from "@/lib/portfolio/get-portfolio-content";
+import { PortfolioErrorBoundary } from "@/lib/portfolio/portfolio-error-boundary";
 import { PortfolioConfigProvider } from "@/lib/portfolio/portfolio-provider";
+import type { PortfolioContent } from "@/lib/portfolio/types";
 import "./globals.css";
 
 const phudu = Phudu({
@@ -26,12 +29,15 @@ export const metadata: Metadata = {
   description: "made by @devansh",
 };
 
+/** Fresh DB read per request; avoids a static snapshot of portfolio in the shell. */
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  let initialPortfolio = DEFAULT_PORTFOLIO_CONTENT;
+  let initialPortfolio: PortfolioContent | undefined;
   let initialFetchedAt = 0;
   try {
     initialPortfolio = await getPortfolioContent();
@@ -46,12 +52,16 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${phudu.variable} antialiased`}
       >
         <AppProviders>
-          <PortfolioConfigProvider
-            initialPortfolio={initialPortfolio}
-            initialFetchedAt={initialFetchedAt}
-          >
-            {children}
-          </PortfolioConfigProvider>
+          <PortfolioErrorBoundary>
+            <Suspense fallback={<PortfolioLoadingFallback />}>
+              <PortfolioConfigProvider
+                initialPortfolio={initialPortfolio}
+                initialFetchedAt={initialFetchedAt}
+              >
+                {children}
+              </PortfolioConfigProvider>
+            </Suspense>
+          </PortfolioErrorBoundary>
         </AppProviders>
       </body>
     </html>
