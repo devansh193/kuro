@@ -3,10 +3,14 @@ import { DottedBackground } from "@/modules/home/components/ui/dotted-background
 import { ContainerTextFlip } from "@/modules/home/components/ui/text-rotate";
 import { AvatarGroup } from "@/components/avatar-group";
 import { sampleAvatars } from "@/data/sample";
+import { usePortfolioContent } from "@/lib/portfolio/portfolio-provider";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export const HomeView = () => {
+  const { content } = usePortfolioContent();
+  const { hero } = content;
+
   return (
     <div
       id="home"
@@ -43,7 +47,7 @@ export const HomeView = () => {
           )}
         />
         <h1 className="font-semibold text-lg font-phudu selection-black">
-          WORK WITH KURO
+          {hero.eyebrow}
         </h1>
         <motion.div
           className={cn(
@@ -61,7 +65,7 @@ export const HomeView = () => {
             delay: 0.2,
           }}
         >
-          Turning your footage into
+          {hero.leadIn}
           <ContainerTextFlip
             className={cn(
               // Visual
@@ -73,11 +77,7 @@ export const HomeView = () => {
               // Typography
               "text-2xl md:text-6xl"
             )}
-            words={[
-              "powerful stories",
-              "reach and revenue ",
-              "lasting success",
-            ]}
+            words={hero.rotatingPhrases}
           />
         </motion.div>
         <motion.h1
@@ -91,7 +91,7 @@ export const HomeView = () => {
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Where creativity meets precision in every frame
+          {hero.tagline}
         </motion.h1>
       </div>
       <div

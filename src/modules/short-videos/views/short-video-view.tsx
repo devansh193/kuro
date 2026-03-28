@@ -1,15 +1,12 @@
+"use client";
+
+import { usePortfolioContent } from "@/lib/portfolio/portfolio-provider";
 import { ShortVideo } from "../components/ui/short-video";
 
-const shorts = [
-  { shortId: "ve88PYjFzRU" },
-  { shortId: "8wV-h3iVKMU" },
-  { shortId: "ve88PYjFzRU" },
-  { shortId: "8wV-h3iVKMU" },
-  { shortId: "ve88PYjFzRU" },
-  { shortId: "8wV-h3iVKMU" },
-];
-
 export const ShortVideoView = () => {
+  const { content } = usePortfolioContent();
+  const { shorts, sections } = content;
+
   return (
     <div
       id="shorts"
@@ -31,7 +28,7 @@ export const ShortVideoView = () => {
             selection:bg-black selection:text-white
           `}
         >
-          THE SHORT FUSE
+          {sections.shortsTitle}
         </h1>
       </div>
 
