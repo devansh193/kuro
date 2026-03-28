@@ -54,13 +54,17 @@ export function PortfolioConfigProvider({
   const queryClient = useQueryClient();
 
   const hasServerSeed = initialPortfolio !== undefined;
+  const serverBaseline = useMemo(
+    () => (initialPortfolio !== undefined ? mergePortfolioContent(initialPortfolio) : undefined),
+    [initialPortfolio]
+  );
+
   const query = useQuery({
     queryKey: portfolioQueryKey,
     queryFn: fetchPortfolio,
-    initialData: hasServerSeed ? initialPortfolio : undefined,
+    initialData: hasServerSeed ? serverBaseline : undefined,
     initialDataUpdatedAt: hasServerSeed ? (initialFetchedAt ?? Date.now()) : undefined,
     staleTime: hasServerSeed && initialFetchedAt === 0 ? 0 : 30_000,
-    placeholderData: hasServerSeed ? undefined : DEFAULT_PORTFOLIO_CONTENT,
   });
 
   const loadErrorNotified = useRef(false);
@@ -172,7 +176,7 @@ export function PortfolioConfigProvider({
     [queryClient, mutation]
   );
 
-  const content = query.data ?? DEFAULT_PORTFOLIO_CONTENT;
+  const content = query.data ?? serverBaseline ?? DEFAULT_PORTFOLIO_CONTENT;
 
   const value = useMemo<PortfolioContextValue>(
     () => ({

@@ -26,6 +26,9 @@ export const metadata: Metadata = {
   description: "made by @devansh",
 };
 
+/** Always read portfolio from the DB per request so hero copy isn’t stale vs client refetch. */
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
