@@ -1,26 +1,82 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { isEqual } from "lodash";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { hasChanges, pickChangedRecord } from "@/lib/portfolio/pick-changed";
 import { usePortfolioContent } from "@/lib/portfolio/portfolio-provider";
+import type { PortfolioContent } from "@/lib/portfolio/types";
+
+type AboutFormValues = PortfolioContent["about"];
+type FooterFormValues = PortfolioContent["footer"];
 
 export default function AdminAboutPage() {
-  const { content, setContent } = usePortfolioContent();
-  const { about, footer } = content;
+  const { content, setContent, savePortfolio } = usePortfolioContent();
 
-  const setAbout = (patch: Partial<typeof about>) => {
+  const aboutForm = useForm<AboutFormValues>({
+    defaultValues: content.about,
+  });
+  const footerForm = useForm<FooterFormValues>({
+    defaultValues: content.footer,
+  });
+
+  const aboutSnapshot = useRef(content.about);
+  const footerSnapshot = useRef(content.footer);
+  const prevAbout = useRef(content.about);
+  const prevFooter = useRef(content.footer);
+
+  useEffect(() => {
+    if (!isEqual(content.about, prevAbout.current)) {
+      prevAbout.current = content.about;
+      aboutForm.reset(content.about);
+      aboutSnapshot.current = content.about;
+    }
+  }, [content, aboutForm]);
+
+  useEffect(() => {
+    if (!isEqual(content.footer, prevFooter.current)) {
+      prevFooter.current = content.footer;
+      footerForm.reset(content.footer);
+      footerSnapshot.current = content.footer;
+    }
+  }, [content, footerForm]);
+
+  const onAboutSubmit = (values: AboutFormValues) => {
+    const patch = pickChangedRecord(
+      values as Record<string, unknown>,
+      aboutSnapshot.current as Record<string, unknown>,
+    );
+    if (!hasChanges(patch)) return;
     setContent((c) => ({
       ...c,
-      about: { ...c.about, ...patch },
+      about: { ...c.about, ...(patch as Partial<AboutFormValues>) },
     }));
+    savePortfolio();
   };
 
-  const setFooter = (patch: Partial<typeof footer>) => {
+  const onFooterSubmit = (values: FooterFormValues) => {
+    const patch = pickChangedRecord(
+      values as Record<string, unknown>,
+      footerSnapshot.current as Record<string, unknown>,
+    );
+    if (!hasChanges(patch)) return;
     setContent((c) => ({
       ...c,
-      footer: { ...c.footer, ...patch },
+      footer: { ...c.footer, ...(patch as Partial<FooterFormValues>) },
     }));
+    savePortfolio();
   };
 
   return (
@@ -32,86 +88,152 @@ export default function AdminAboutPage() {
         </p>
       </div>
 
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="title">Title</Label>
-          <Input
-            id="title"
-            value={about.title}
-            onChange={(e) => setAbout({ title: e.target.value })}
+      <Form {...aboutForm}>
+        <form
+          onSubmit={aboutForm.handleSubmit(onAboutSubmit)}
+          className="space-y-4"
+        >
+          <FormField
+            control={aboutForm.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input {...field} id="title" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="body">Body</Label>
-          <Textarea
-            id="body"
-            value={about.body}
-            onChange={(e) => setAbout({ body: e.target.value })}
-            rows={5}
+          <FormField
+            control={aboutForm.control}
+            name="body"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Body</FormLabel>
+                <FormControl>
+                  <Textarea {...field} id="body" rows={5} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="ctaPrefix">CTA — text before link</Label>
-          <Input
-            id="ctaPrefix"
-            value={about.ctaPrefix}
-            onChange={(e) => setAbout({ ctaPrefix: e.target.value })}
-            placeholder="Ready to elevate your content? Let's"
+          <FormField
+            control={aboutForm.control}
+            name="ctaPrefix"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>CTA — text before link</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    id="ctaPrefix"
+                    placeholder="Ready to elevate your content? Let's"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="ctaLinkText">CTA — link label</Label>
-          <Input
-            id="ctaLinkText"
-            value={about.ctaLinkText}
-            onChange={(e) => setAbout({ ctaLinkText: e.target.value })}
+          <FormField
+            control={aboutForm.control}
+            name="ctaLinkText"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>CTA — link label</FormLabel>
+                <FormControl>
+                  <Input {...field} id="ctaLinkText" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="ctaUrl">CTA — URL</Label>
-          <Input
-            id="ctaUrl"
-            value={about.ctaUrl}
-            onChange={(e) => setAbout({ ctaUrl: e.target.value })}
-            placeholder="https://"
+          <FormField
+            control={aboutForm.control}
+            name="ctaUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>CTA — URL</FormLabel>
+                <FormControl>
+                  <Input {...field} id="ctaUrl" placeholder="https://" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="ctaSuffix">CTA — text after link</Label>
-          <Input
-            id="ctaSuffix"
-            value={about.ctaSuffix}
-            onChange={(e) => setAbout({ ctaSuffix: e.target.value })}
+          <FormField
+            control={aboutForm.control}
+            name="ctaSuffix"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>CTA — text after link</FormLabel>
+                <FormControl>
+                  <Input {...field} id="ctaSuffix" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-      </div>
+          <Button
+            type="submit"
+            disabled={
+              !aboutForm.formState.isDirty || aboutForm.formState.isSubmitting
+            }
+          >
+            Save about
+          </Button>
+        </form>
+      </Form>
 
       <div className="border-t border-border pt-8 space-y-4">
         <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
           Footer
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="copyrightName">Copyright name</Label>
-            <Input
-              id="copyrightName"
-              value={footer.copyrightName}
-              onChange={(e) =>
-                setFooter({ copyrightName: e.target.value })
-              }
+        <Form {...footerForm}>
+          <form
+            onSubmit={footerForm.handleSubmit(onFooterSubmit)}
+            className="grid gap-4 sm:grid-cols-2"
+          >
+            <FormField
+              control={footerForm.control}
+              name="copyrightName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Copyright name</FormLabel>
+                  <FormControl>
+                    <Input {...field} id="copyrightName" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="copyrightYear">Year</Label>
-            <Input
-              id="copyrightYear"
-              value={footer.copyrightYear}
-              onChange={(e) =>
-                setFooter({ copyrightYear: e.target.value })
-              }
+            <FormField
+              control={footerForm.control}
+              name="copyrightYear"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Year</FormLabel>
+                  <FormControl>
+                    <Input {...field} id="copyrightYear" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-        </div>
+            <div className="sm:col-span-2">
+              <Button
+                type="submit"
+                disabled={
+                  !footerForm.formState.isDirty ||
+                  footerForm.formState.isSubmitting
+                }
+              >
+                Save footer
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
     </div>
   );

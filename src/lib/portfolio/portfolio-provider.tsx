@@ -10,6 +10,7 @@ import {
   useRef,
   type ReactNode,
 } from "react";
+import { toast } from "sonner";
 import { DEFAULT_PORTFOLIO_CONTENT } from "./defaults";
 import { mergePortfolioContent } from "./merge";
 import type { PortfolioContent } from "./types";
@@ -17,6 +18,7 @@ import type { PortfolioContent } from "./types";
 type PortfolioContextValue = {
   content: PortfolioContent;
   setContent: (next: PortfolioContent | ((prev: PortfolioContent) => PortfolioContent)) => void;
+  savePortfolio: () => void;
   resetToDefaults: () => void;
   exportJson: () => void;
   importJsonFile: (file: File) => Promise<void>;
@@ -27,7 +29,6 @@ type PortfolioContextValue = {
 
 const PortfolioContext = createContext<PortfolioContextValue | null>(null);
 
-const SAVE_DEBOUNCE_MS = 400;
 export const portfolioQueryKey = ["portfolio"] as const;
 
 async function fetchPortfolio(): Promise<PortfolioContent> {
@@ -41,15 +42,39 @@ async function fetchPortfolio(): Promise<PortfolioContent> {
   return mergePortfolioContent(data);
 }
 
-export function PortfolioConfigProvider({ children }: { children: ReactNode }) {
+export function PortfolioConfigProvider({
+  children,
+  initialPortfolio,
+  initialFetchedAt,
+}: {
+  children: ReactNode;
+  initialPortfolio?: PortfolioContent;
+  initialFetchedAt?: number;
+}) {
   const queryClient = useQueryClient();
-  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const hasServerSeed = initialPortfolio !== undefined;
   const query = useQuery({
     queryKey: portfolioQueryKey,
     queryFn: fetchPortfolio,
-    placeholderData: DEFAULT_PORTFOLIO_CONTENT,
+    initialData: hasServerSeed ? initialPortfolio : undefined,
+    initialDataUpdatedAt: hasServerSeed ? (initialFetchedAt ?? Date.now()) : undefined,
+    staleTime: hasServerSeed && initialFetchedAt === 0 ? 0 : 30_000,
+    placeholderData: hasServerSeed ? undefined : DEFAULT_PORTFOLIO_CONTENT,
   });
+
+  const loadErrorNotified = useRef(false);
+  useEffect(() => {
+    const err = query.error;
+    if (err instanceof Error) {
+      if (!loadErrorNotified.current) {
+        loadErrorNotified.current = true;
+        toast.error(`Could not load portfolio: ${err.message}`);
+      }
+    } else {
+      loadErrorNotified.current = false;
+    }
+  }, [query.error]);
 
   const mutation = useMutation({
     mutationFn: async (body: PortfolioContent) => {
@@ -71,22 +96,18 @@ export function PortfolioConfigProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  const scheduleSave = useCallback(
-    (merged: PortfolioContent) => {
-      if (saveTimer.current) clearTimeout(saveTimer.current);
-      saveTimer.current = setTimeout(() => {
-        saveTimer.current = null;
-        mutation.mutate(merged);
-      }, SAVE_DEBOUNCE_MS);
-    },
-    [mutation]
-  );
-
-  useEffect(() => {
-    return () => {
-      if (saveTimer.current) clearTimeout(saveTimer.current);
-    };
-  }, []);
+  const savePortfolio = useCallback(() => {
+    const current =
+      queryClient.getQueryData<PortfolioContent>(portfolioQueryKey) ??
+      DEFAULT_PORTFOLIO_CONTENT;
+    const promise = mutation.mutateAsync(mergePortfolioContent(current));
+    toast.promise(promise, {
+      loading: "Saving…",
+      success: "Portfolio saved",
+      error: (e) =>
+        e instanceof Error ? e.message : "Failed to save portfolio",
+    });
+  }, [queryClient, mutation]);
 
   const setContent = useCallback(
     (next: PortfolioContent | ((prev: PortfolioContent) => PortfolioContent)) => {
@@ -96,18 +117,22 @@ export function PortfolioConfigProvider({ children }: { children: ReactNode }) {
           typeof next === "function"
             ? (next as (prev: PortfolioContent) => PortfolioContent)(base)
             : (next as PortfolioContent);
-        const merged = mergePortfolioContent(resolved);
-        scheduleSave(merged);
-        return merged;
+        return mergePortfolioContent(resolved);
       });
     },
-    [queryClient, scheduleSave]
+    [queryClient]
   );
 
   const resetToDefaults = useCallback(() => {
     const fresh = structuredClone(DEFAULT_PORTFOLIO_CONTENT);
     queryClient.setQueryData(portfolioQueryKey, fresh);
-    mutation.mutate(fresh);
+    const promise = mutation.mutateAsync(fresh);
+    toast.promise(promise, {
+      loading: "Resetting…",
+      success: "Restored defaults",
+      error: (e) =>
+        e instanceof Error ? e.message : "Failed to reset portfolio",
+    });
   }, [queryClient, mutation]);
 
   const exportJson = useCallback(() => {
@@ -126,10 +151,23 @@ export function PortfolioConfigProvider({ children }: { children: ReactNode }) {
   const importJsonFile = useCallback(
     async (file: File) => {
       const text = await file.text();
-      const parsed = JSON.parse(text) as unknown;
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(text) as unknown;
+      } catch {
+        toast.error("Invalid JSON file. Use a backup exported from this admin.");
+        throw new Error("Invalid JSON");
+      }
       const merged = mergePortfolioContent(parsed);
       queryClient.setQueryData(portfolioQueryKey, merged);
-      mutation.mutate(merged);
+      const promise = mutation.mutateAsync(merged);
+      toast.promise(promise, {
+        loading: "Importing…",
+        success: "Imported and saved",
+        error: (e) =>
+          e instanceof Error ? e.message : "Failed to save imported data",
+      });
+      await promise;
     },
     [queryClient, mutation]
   );
@@ -140,6 +178,7 @@ export function PortfolioConfigProvider({ children }: { children: ReactNode }) {
     () => ({
       content,
       setContent,
+      savePortfolio,
       resetToDefaults,
       exportJson,
       importJsonFile,
@@ -150,6 +189,7 @@ export function PortfolioConfigProvider({ children }: { children: ReactNode }) {
     [
       content,
       setContent,
+      savePortfolio,
       resetToDefaults,
       exportJson,
       importJsonFile,

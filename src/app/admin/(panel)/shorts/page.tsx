@@ -1,45 +1,54 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { usePortfolioContent } from "@/lib/portfolio/portfolio-provider";
+import { useEffect, useRef } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { isEqual } from "lodash";
 import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { usePortfolioContent } from "@/lib/portfolio/portfolio-provider";
+import type { PortfolioShort } from "@/lib/portfolio/types";
+
+type ShortsFormValues = {
+  shorts: PortfolioShort[];
+};
+
 export default function AdminShortsPage() {
-  const { content, setContent } = usePortfolioContent();
-  const { shorts } = content;
+  const { content, setContent, savePortfolio } = usePortfolioContent();
 
-  const update = (index: number, shortId: string) => {
-    setContent((c) => {
-      const next = [...c.shorts];
-      next[index] = { shortId };
-      return { ...c, shorts: next };
-    });
-  };
+  const form = useForm<ShortsFormValues>({
+    defaultValues: { shorts: content.shorts },
+  });
 
-  const add = () => {
-    setContent((c) => ({
-      ...c,
-      shorts: [...c.shorts, { shortId: "" }],
-    }));
-  };
+  const { fields, append, remove, move } = useFieldArray({
+    control: form.control,
+    name: "shorts",
+  });
 
-  const remove = (index: number) => {
-    setContent((c) => ({
-      ...c,
-      shorts: c.shorts.filter((_, i) => i !== index),
-    }));
-  };
+  const snapshot = useRef(content.shorts);
+  const prevShorts = useRef(content.shorts);
 
-  const move = (index: number, dir: -1 | 1) => {
-    setContent((c) => {
-      const next = [...c.shorts];
-      const j = index + dir;
-      if (j < 0 || j >= next.length) return c;
-      [next[index], next[j]] = [next[j], next[index]];
-      return { ...c, shorts: next };
-    });
+  useEffect(() => {
+    if (!isEqual(content.shorts, prevShorts.current)) {
+      prevShorts.current = content.shorts;
+      form.reset({ shorts: content.shorts });
+      snapshot.current = content.shorts;
+    }
+  }, [content, form]);
+
+  const onSubmit = (values: ShortsFormValues) => {
+    if (isEqual(values.shorts, snapshot.current)) return;
+    setContent((c) => ({ ...c, shorts: values.shorts }));
+    savePortfolio();
   };
 
   return (
@@ -51,63 +60,89 @@ export default function AdminShortsPage() {
         </p>
       </div>
 
-      <ul className="space-y-3">
-        {shorts.map((short, index) => (
-          <li
-            key={`${index}-${short.shortId}`}
-            className="flex flex-col sm:flex-row gap-2 sm:items-end"
-          >
-            <div className="flex-1 space-y-2">
-              <Label htmlFor={`short-${index}`}>Short #{index + 1}</Label>
-              <Input
-                id={`short-${index}`}
-                value={short.shortId}
-                onChange={(e) => update(index, e.target.value)}
-                placeholder="video ID"
-              />
-            </div>
-            <div className="flex gap-1 shrink-0">
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                className="size-9"
-                onClick={() => move(index, -1)}
-                disabled={index === 0}
-                aria-label="Move up"
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+          <ul className="space-y-3">
+            {fields.map((field, index) => (
+              <li
+                key={field.id}
+                className="flex flex-col sm:flex-row gap-2 sm:items-end"
               >
-                <ArrowUp className="size-4" />
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                className="size-9"
-                onClick={() => move(index, 1)}
-                disabled={index === shorts.length - 1}
-                aria-label="Move down"
-              >
-                <ArrowDown className="size-4" />
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                className="size-9 text-destructive"
-                onClick={() => remove(index)}
-                aria-label="Remove"
-              >
-                <Trash2 className="size-4" />
-              </Button>
-            </div>
-          </li>
-        ))}
-      </ul>
+                <FormField
+                  control={form.control}
+                  name={`shorts.${index}.shortId`}
+                  render={({ field: f }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel htmlFor={`short-${index}`}>
+                        Short #{index + 1}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          id={`short-${index}`}
+                          {...f}
+                          placeholder="video ID"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex gap-1 shrink-0">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="size-9"
+                    onClick={() => move(index, index - 1)}
+                    disabled={index === 0}
+                    aria-label="Move up"
+                  >
+                    <ArrowUp className="size-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="size-9"
+                    onClick={() => move(index, index + 1)}
+                    disabled={index === fields.length - 1}
+                    aria-label="Move down"
+                  >
+                    <ArrowDown className="size-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="size-9 text-destructive"
+                    onClick={() => remove(index)}
+                    aria-label="Remove"
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                </div>
+              </li>
+            ))}
+          </ul>
 
-      <Button type="button" variant="secondary" onClick={add}>
-        <Plus className="size-4" />
-        Add short
-      </Button>
+          <div className="flex flex-wrap gap-3 pt-2">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => append({ shortId: "" })}
+            >
+              <Plus className="size-4" />
+              Add short
+            </Button>
+            <Button
+              type="submit"
+              disabled={!form.formState.isDirty || form.formState.isSubmitting}
+            >
+              Save shorts
+            </Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }

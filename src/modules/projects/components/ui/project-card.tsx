@@ -61,8 +61,8 @@ export const ProjectCard = ({
       </div>
       <div className="flex items-center justify-send mt-4 gap-x-2">
         <Image
-          className="rounded-full border-[1.5px]"
-          src={imageSrc || "/1.jpg"}
+          className="size-10 shrink-0 rounded-full border-[1.5px] object-cover aspect-square"
+          src={imageSrc}
           alt={clientName || "Author"}
           width={40}
           height={40}

@@ -1,12 +1,23 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { isEqual } from "lodash";
+import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
+
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { usePortfolioContent } from "@/lib/portfolio/portfolio-provider";
 import type { SocialLink, SocialPlatform } from "@/lib/portfolio/types";
-import { v4 as uuidv4 } from "uuid";
-import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
 
 const PLATFORM_OPTIONS: { value: SocialPlatform; label: string }[] = [
   { value: "x", label: "X (Twitter)" },
@@ -18,48 +29,38 @@ const PLATFORM_OPTIONS: { value: SocialPlatform; label: string }[] = [
   { value: "custom", label: "Custom / other" },
 ];
 
+type SocialsFormValues = {
+  socialLinks: SocialLink[];
+};
+
 export default function AdminSocialsPage() {
-  const { content, setContent } = usePortfolioContent();
-  const { socialLinks } = content;
+  const { content, setContent, savePortfolio } = usePortfolioContent();
 
-  const update = (index: number, patch: Partial<SocialLink>) => {
-    setContent((c) => {
-      const next = [...c.socialLinks];
-      next[index] = { ...next[index], ...patch };
-      return { ...c, socialLinks: next };
-    });
-  };
+  const form = useForm<SocialsFormValues>({
+    defaultValues: { socialLinks: content.socialLinks },
+  });
 
-  const add = () => {
-    setContent((c) => ({
-      ...c,
-      socialLinks: [
-        ...c.socialLinks,
-        {
-          id: uuidv4(),
-          label: "Label",
-          url: "https://",
-          platform: "custom",
-        },
-      ],
-    }));
-  };
+  const { fields, append, remove, move } = useFieldArray({
+    control: form.control,
+    name: "socialLinks",
+    keyName: "_rowKey",
+  });
 
-  const remove = (index: number) => {
-    setContent((c) => ({
-      ...c,
-      socialLinks: c.socialLinks.filter((_, i) => i !== index),
-    }));
-  };
+  const snapshot = useRef(content.socialLinks);
+  const prevLinks = useRef(content.socialLinks);
 
-  const move = (index: number, dir: -1 | 1) => {
-    setContent((c) => {
-      const next = [...c.socialLinks];
-      const j = index + dir;
-      if (j < 0 || j >= next.length) return c;
-      [next[index], next[j]] = [next[j], next[index]];
-      return { ...c, socialLinks: next };
-    });
+  useEffect(() => {
+    if (!isEqual(content.socialLinks, prevLinks.current)) {
+      prevLinks.current = content.socialLinks;
+      form.reset({ socialLinks: content.socialLinks });
+      snapshot.current = content.socialLinks;
+    }
+  }, [content, form]);
+
+  const onSubmit = (values: SocialsFormValues) => {
+    if (isEqual(values.socialLinks, snapshot.current)) return;
+    setContent((c) => ({ ...c, socialLinks: values.socialLinks }));
+    savePortfolio();
   };
 
   return (
@@ -71,97 +72,143 @@ export default function AdminSocialsPage() {
         </p>
       </div>
 
-      <ul className="space-y-6">
-        {socialLinks.map((link, index) => (
-          <li
-            key={link.id}
-            className="rounded-lg border border-border bg-card p-4 space-y-3"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-medium text-muted-foreground">
-                #{index + 1}
-              </span>
-              <div className="flex flex-wrap gap-1">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  className="size-8"
-                  onClick={() => move(index, -1)}
-                  disabled={index === 0}
-                  aria-label="Move up"
-                >
-                  <ArrowUp className="size-4" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  className="size-8"
-                  onClick={() => move(index, 1)}
-                  disabled={index === socialLinks.length - 1}
-                  aria-label="Move down"
-                >
-                  <ArrowDown className="size-4" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  className="size-8 text-destructive"
-                  onClick={() => remove(index)}
-                  aria-label="Remove"
-                >
-                  <Trash2 className="size-4" />
-                </Button>
-              </div>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor={`plat-${link.id}`}>Platform</Label>
-                <select
-                  id={`plat-${link.id}`}
-                  value={link.platform}
-                  onChange={(e) =>
-                    update(index, {
-                      platform: e.target.value as SocialPlatform,
-                    })
-                  }
-                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
-                >
-                  {PLATFORM_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor={`lab-${link.id}`}>Label</Label>
-                <Input
-                  id={`lab-${link.id}`}
-                  value={link.label}
-                  onChange={(e) => update(index, { label: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor={`url-${link.id}`}>URL</Label>
-                <Input
-                  id={`url-${link.id}`}
-                  value={link.url}
-                  onChange={(e) => update(index, { url: e.target.value })}
-                  placeholder="https:// or mailto:"
-                />
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <ul className="space-y-6">
+            {fields.map((field, index) => (
+              <li
+                key={field._rowKey}
+                className="rounded-lg border border-border bg-card p-4 space-y-3"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    #{index + 1}
+                  </span>
+                  <div className="flex flex-wrap gap-1">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      className="size-8"
+                      onClick={() => move(index, index - 1)}
+                      disabled={index === 0}
+                      aria-label="Move up"
+                    >
+                      <ArrowUp className="size-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      className="size-8"
+                      onClick={() => move(index, index + 1)}
+                      disabled={index === fields.length - 1}
+                      aria-label="Move down"
+                    >
+                      <ArrowDown className="size-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      className="size-8 text-destructive"
+                      onClick={() => remove(index)}
+                      aria-label="Remove"
+                    >
+                      <Trash2 className="size-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name={`socialLinks.${index}.platform`}
+                    render={({ field: f }) => (
+                      <FormItem>
+                        <FormLabel htmlFor={`plat-${field.id}`}>
+                          Platform
+                        </FormLabel>
+                        <FormControl>
+                          <select
+                            id={`plat-${field.id}`}
+                            value={f.value}
+                            onChange={f.onChange}
+                            onBlur={f.onBlur}
+                            name={f.name}
+                            ref={f.ref}
+                            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+                          >
+                            {PLATFORM_OPTIONS.map((o) => (
+                              <option key={o.value} value={o.value}>
+                                {o.label}
+                              </option>
+                            ))}
+                          </select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`socialLinks.${index}.label`}
+                    render={({ field: f }) => (
+                      <FormItem>
+                        <FormLabel htmlFor={`lab-${field.id}`}>Label</FormLabel>
+                        <FormControl>
+                          <Input id={`lab-${field.id}`} {...f} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`socialLinks.${index}.url`}
+                    render={({ field: f }) => (
+                      <FormItem className="sm:col-span-2">
+                        <FormLabel htmlFor={`url-${field.id}`}>URL</FormLabel>
+                        <FormControl>
+                          <Input
+                            id={`url-${field.id}`}
+                            {...f}
+                            placeholder="https:// or mailto:"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
 
-      <Button type="button" variant="secondary" onClick={add}>
-        <Plus className="size-4" />
-        Add link
-      </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() =>
+                append({
+                  id: uuidv4(),
+                  label: "Label",
+                  url: "https://",
+                  platform: "custom",
+                })
+              }
+            >
+              <Plus className="size-4" />
+              Add link
+            </Button>
+            <Button
+              type="submit"
+              disabled={!form.formState.isDirty || form.formState.isSubmitting}
+            >
+              Save social links
+            </Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }
