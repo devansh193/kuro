@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono, Phudu } from "next/font/google";
 import { AppProviders } from "@/app/providers";
 import { PortfolioLoadingFallback } from "@/components/portfolio-loading-fallback";
@@ -63,6 +64,7 @@ export default async function RootLayout({
             </Suspense>
           </PortfolioErrorBoundary>
         </AppProviders>
+        <Analytics />
       </body>
     </html>
   );
